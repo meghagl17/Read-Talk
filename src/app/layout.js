@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={inter.className}>
           <div className="mx-36 text-2xl">
+            <Navbar />
             <div className="flex flex-col items-center text-center mt-32">
-              <Navbar />
               {children} 
             </div>
           </div>
