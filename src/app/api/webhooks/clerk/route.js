@@ -55,6 +55,7 @@ export async function POST(req) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
   const eventType = evt.eventType;
+  console.log(`eventType: ${eventType}`);
 
   // CREATE user in mongoDB
   if (eventType === "user.created") {
@@ -84,6 +85,8 @@ export async function POST(req) {
     console.log(`new user created: ${newUser}`)
     return NextResponse.json({ message: "new user created", user: newUser });
 
+  } else {
+    console.log('Event Type did not match "user.created"');
   }
 
   console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
