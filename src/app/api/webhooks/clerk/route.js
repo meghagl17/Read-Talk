@@ -54,10 +54,10 @@ export async function POST(req) {
   // Do something with the payload
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
-  const eventType = evt.type;
+  const eventType = evt.eventType;
 
   // CREATE user in mongoDB
-  if (event === "user.created") {
+  if (eventType === "user.created") {
     const { id, email_address, image_url, first_name, last_name, username } = evt.data;
 
     const user = {
