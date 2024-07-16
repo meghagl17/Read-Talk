@@ -81,6 +81,7 @@ export async function POST(req) {
         });
     }
 
+    console.log(`new user created: ${newUser}`)
     return NextResponse.json({ message: "new user created", user: newUser });
 
   }
