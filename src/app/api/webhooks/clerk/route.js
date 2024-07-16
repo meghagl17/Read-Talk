@@ -56,7 +56,7 @@ export async function POST(req) {
   const { id } = evt.data;
   const eventType = evt.eventType;
 
-  console.log(`evt: ${evt}`);
+  console.log('evt:', evt);
   console.log(`id: ${id}`);
   console.log(`eventType: ${eventType}`);
 
