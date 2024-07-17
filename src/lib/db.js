@@ -1,16 +1,11 @@
 import mongoose, { Mongoose } from "mongoose";
 
-const MONGODB_URL = process.env.MONGODB_URL!;
+const MONGODB_URL = process.env.MONGODB_URL;
 
-interface MongooseConn {
-  conn: Mongoose | null;
-  promise: Promise<Mongoose> | null;
-}
-
-let cached: MongooseConn = (global as any).mongoose;
+let cached = global.mongoose;
 
 if (!cached) {
-  cached = (global as any).mongoose = {
+  cached = (global).mongoose = {
     conn: null,
     promise: null,
   };
@@ -22,7 +17,7 @@ export const connect = async () => {
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URL, {
-      dbName: "bookTalk",
+      dbName: "BookTalk",
       bufferCommands: false,
       connectTimeoutMS: 30000,
     });
