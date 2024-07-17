@@ -11,7 +11,7 @@ if(!cached){
     };
 }
 
-export const connent = async () => {
+export const connect = async () => {
     if (cached.conn) {
         return cached.conn;
     }
