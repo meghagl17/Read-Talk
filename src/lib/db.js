@@ -1,6 +1,10 @@
 import mongoose, { Moongoose } from "mongoose";
 
-const MONGODB_URL = process.env.MONGODB_URL
+const MONGODB_URL = process.env.MONGODB_URL;
+
+if (!MONGODB_URL) {
+  throw new Error('Please define the MONGODB_URL environment variable inside .env.local');
+}
 
 let cached = global.mongoose;
 
@@ -15,8 +19,9 @@ export const connect = async () => {
     if (cached.conn) {
         return cached.conn;
     }
+    
     cached.promise = cached.promise || mongoose.connect(MONGODB_URL, {
-        dbName: 'bookTalk-db',
+        dbName: 'Book-Talk-db',
         bufferCommands: false, 
         connectTimeoutMS: 30000
     })
