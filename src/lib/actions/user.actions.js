@@ -10,6 +10,7 @@ export async function createUser(user){
         console.log("in user.actions.js", JSON.stringify(newUser));
         return JSON.parse(JSON.stringify(newUser));
     } catch (error){
+        console.log("error in .actions file");
         console.log(error);
     }
 }
