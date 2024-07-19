@@ -16,34 +16,37 @@ export function Navbar() {
     // const isAuth = !!userId;
 
     return (
-        <div>
-            <ul className="flex justify-between m-10 items-center">
+        <div className="w-full border-b px-6 py-3">
+            <div className="flex flex-row justify-between items-center">
+                <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                    ReadTalk
+                </h3>
                 <div>
                     <Link href="/">
-                        <li>Home</li>
+                        Home
                     </Link>
                 </div>
                 <div className="flex gap-10">
                     {!userId ? (
                         <>
                             <Link href="/sign-in">
-                                <li>Login</li>
+                                Login
                             </Link>
 
                             <Link href="/sign-up">
-                                <li>Sign up</li>
+                                Sign up
                             </Link>
                         </>
                     ):(
-                        <>
+                        <div>
                             <Link href="/profile">
-                                <li>Profile</li>
+                                Profile
                             </Link>
-                            <li> <UserButton afterSignOutUrl="/" /></li>
-                        </>
+                            <UserButton afterSignOutUrl="/" />
+                        </div>
                     )}
                 </div>
-            </ul>
+            </div>
         </div>
     )
 }

@@ -1,10 +1,8 @@
-"use client"
-
 import { useState, useEffect } from 'react';
 
-export default function Home() {
+export default function Book() {
   const [books, setBooks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('it ends with us');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -12,9 +10,9 @@ export default function Home() {
       setLoading(true);
       try {
         const res = await fetch(`/api/books?query=${searchQuery}`);
-        // const data = await res.json();
         console.log(res);
-        setBooks(res);
+        // const data = await res.json();
+        // setBooks(data);
       } catch (error) {
         console.error('Error fetching books:', error);
       }
