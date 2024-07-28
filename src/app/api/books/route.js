@@ -24,10 +24,12 @@ async function fetchBooks(query) {
 
 // Named export for the POST method
 export async function POST(req) {
+  console.log('books');
   try {
     const { query } = await req.json();
     const books = await fetchBooks(query);
-    return NextResponse.json(books, { status: 200 });
+    console.log(books);
+    return new Response(JSON.stringify(books), { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

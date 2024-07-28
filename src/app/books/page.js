@@ -8,7 +8,7 @@ const fetchBooks = async (searchQuery, setBooks) => {
         const url = `/api/books`;
         console.log(url);
         const response = await axios.post(url, { query: searchQuery });
-        console.log(response.items);
+        console.log(response.data);
         // setBooks(response.items);
         // setFoodList(response.data);
       } catch (error) {
