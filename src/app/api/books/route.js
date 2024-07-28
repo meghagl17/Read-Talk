@@ -8,7 +8,7 @@ async function fetchBooks(query) {
   let url = `${BASE_URL}?maxResults=20&key=${API_KEY}`;
 
   if (query) {
-    url += `&q=${encodeURIComponent(query)}`;
+    url += `&q=${encodeURIComponent(query)}`; 
   }
 
   console.log(query); // Log query parameter
