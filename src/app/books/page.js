@@ -1,26 +1,29 @@
+"use client"
+
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-export default function Book() {
+const fetchBooks = async (searchQuery, setBooks) => {
+    try {
+        const url = `/api/books`;
+        console.log(url);
+        const response = await axios.post(url, { query: searchQuery });
+        console.log(response.items);
+        // setBooks(response.items);
+        // setFoodList(response.data);
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+      }
+};
+
+export default function Home() {
   const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchBooks() {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/books?query=${searchQuery}`);
-        console.log(res);
-        // const data = await res.json();
-        // setBooks(data);
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
-      setLoading(false);
-    }
-
-    fetchBooks();
-  }, [searchQuery]);
+    fetchBooks(searchQuery, setBooks);
+  })
 
   return (
     <div>
