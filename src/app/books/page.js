@@ -1,7 +1,21 @@
 "use client";
 
+import styles from './styles.css';
+
 import axios from 'axios';
 import { useState } from 'react';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card"
+
+import { Input } from "../../components/ui/input"
+
 
 export default function Home() {
   const [books, setBooks] = useState([]);
@@ -25,29 +39,40 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Book Search</h1>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search for books..."
-      />
-      <button onClick={fetchBooks}>Search</button>
+      <div className="search-container">
+        <Input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search for books..."
+          className="search-input"
+        />
+        <button onClick={fetchBooks} className="search-button">Search</button>
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <ul>
+        <div className="grid-container">
           {books.map((book) => (
-            <li key={book.id}>
-              <h2>{book.volumeInfo.title}</h2>
-              <p>by {book.volumeInfo.authors?.join(', ')}</p>
-              <p>Published: {book.volumeInfo.publishedDate}</p>
-              {book.volumeInfo.imageLinks?.thumbnail && (
-                <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
-              )}
-            </li>
+            <Card key={book.id} className="card">
+                {book.volumeInfo.imageLinks?.thumbnail && (
+                  <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
+                )}
+              <CardHeader>
+                <CardTitle>{book.volumeInfo.title}</CardTitle>
+                <CardDescription><p>by {book.volumeInfo.authors?.join(', ')}</p> </CardDescription>
+                {/* <cardDescription>Published: {book.volumeInfo.publishedDate}</cardDescription> */}
+              </CardHeader>
+              <CardContent>
+                <CardDescription>Published: {book.volumeInfo.publishedDate}</CardDescription>
+
+              </CardContent>
+              <CardFooter>
+                <button>more Info!</button>
+              </CardFooter>
+            </Card>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

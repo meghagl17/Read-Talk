@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.2.8",
+    "@shadcn/ui": "^0.0.4",
     "axios": "^1.7.2",
+    "clsx": "^2.1.1",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "svix": "^1.25.0"
+    "svix": "^1.25.0",
+    "tailwind-merge": "^2.4.0"
   },
   "devDependencies": {
     "@types/node": "20.14.10",
