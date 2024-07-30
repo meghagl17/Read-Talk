@@ -1,6 +1,7 @@
 "use client";
 
 import styles from './styles.css';
+import { UserButton, auth, useAuth } from "@clerk/nextjs"
 
 import axios from 'axios';
 import { useState } from 'react';
@@ -16,8 +17,20 @@ import {
 
 import { Input } from "../../components/ui/input"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/ui/dialog"
+
+
 
 export default function Home() {
+  const { isLoaded, userId } = useAuth();
+
   const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -68,7 +81,24 @@ export default function Home() {
 
               </CardContent>
               <CardFooter>
-                <button>more Info!</button>
+                <Dialog>
+                  <DialogTrigger>more info {userId} </DialogTrigger>
+                  <DialogContent>
+                      {book.volumeInfo.imageLinks?.thumbnail && (
+                        <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
+                      )}
+                      {book.volumeInfo.title}
+                      <p>by {book.volumeInfo.authors?.join(', ')}</p>
+                      Published: {book.volumeInfo.publishedDate}
+                    <DialogHeader>
+                      <DialogTitle>more info!</DialogTitle>
+                      <DialogDescription>
+                        more information will come soon
+                      </DialogDescription>
+                      <button type="submit">new Question</button>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardFooter>
             </Card>
           ))}

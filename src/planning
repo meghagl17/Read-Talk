@@ -1,0 +1,22 @@
+when user clicks on a book
+    - open a pop up
+    - GET on mongodb questions collection using that google books ID to check if there are questions
+        - return discussion questions
+        - if NO questions, say "be the first to ask a question"
+
+when user clicks on "post a question"
+    - send to a new page
+    - send in the book ID and book information
+    - user types in the question
+    - user clicks on post a question
+        - CREATE request in the questions db
+            - store the clerk user ID
+            - store the ID of the book that google provides
+            - store the question 
+
+when user clicks on a question to answer
+    - send to a new page
+    - send in the book ID and book information
+    - send in the Question ID
+    - query all the answers that are already there for the specific question
+

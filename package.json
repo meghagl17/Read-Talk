@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.2.8",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@shadcn/ui": "^0.0.4",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.417.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "next": "14.2.5",
