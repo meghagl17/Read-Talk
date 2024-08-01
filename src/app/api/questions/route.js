@@ -1,8 +1,8 @@
-import { connect } from '../../lib/db'
-import Question from '../../lib/modals/question.modal';
+import { connect } from '../../../lib/db'
+import Question from '../../../lib/modals/question.modal';
 // import User from '../../models/User';
 
-export default async function handler(req, res) {
+export async function POST(req, res) {
   await connect();
 
   if (req.method === 'POST') {
