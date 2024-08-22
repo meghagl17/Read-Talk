@@ -2,6 +2,7 @@
 
 import styles from './styles.css';
 import { UserButton, auth, useAuth } from "@clerk/nextjs"
+import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
 
 import axios from 'axios';
 import { useState } from 'react';
@@ -26,9 +27,9 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog"
 
-
-
 export default function Home() {
+  const router = useRouter(); 
+
   const { isLoaded, userId } = useAuth();
 
   const [books, setBooks] = useState([]);
@@ -49,6 +50,10 @@ export default function Home() {
       console.error("Error fetching recommendations:", error);
     }
   };
+
+  const goToQuestion = async (bookId) => {
+    router.push(`/question/${bookId}`);
+}
 
   return (
     <div>
@@ -82,7 +87,7 @@ export default function Home() {
               </CardContent>
               <CardFooter>
                 <Dialog>
-                  <DialogTrigger>more info {userId} </DialogTrigger>
+                  <DialogTrigger>more info userid:{userId} bookId: {book.id}</DialogTrigger>
                   <DialogContent>
                       {book.volumeInfo.imageLinks?.thumbnail && (
                         <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
@@ -95,7 +100,7 @@ export default function Home() {
                       <DialogDescription>
                         more information will come soon
                       </DialogDescription>
-                      <button type="submit">new Question</button>
+                      <button onClick={() => goToQuestion(book.id)} type="submit">new Question</button>
                     </DialogHeader>
                   </DialogContent>
                 </Dialog>

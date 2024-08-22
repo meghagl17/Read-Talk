@@ -12,7 +12,6 @@ const QuestionSchema = new Schema({
   },
   clerkUserID: {
     type: String,
-    unique: true,
   },
 });
 

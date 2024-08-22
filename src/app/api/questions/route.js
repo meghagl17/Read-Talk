@@ -1,29 +1,16 @@
-import { connect } from '../../../lib/db'
-import Question from '../../../lib/modals/question.modal';
-// import User from '../../models/User';
+import { NextResponse } from 'next/server';
+import { createQuestion } from '../../../lib/actions/question.actions.js'
 
-export async function POST(req, res) {
-  await connect();
+export async function POST(request) {
+  try {
+    const { BookId, question, clerkUserID } = await request.json();
 
-  if (req.method === 'POST') {
-    const { bookId, question, userId } = req.body;
+    // Create a new question using the action
+    const newQuestion = await createQuestion({ BookId, question, clerkUserID });
 
-    try {
-    //   const user = await User.findById(userId);
-
-      const newQuestion = new Question({
-        googleBookId,
-        userId,
-        question,
-      });
-
-      await newQuestion.save();
-
-      res.status(201).json(newQuestion);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to post question' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return NextResponse.json({ message: 'Question created successfully!', data: newQuestion }, { status: 201 });
+  } catch (error) {
+    console.error('Failed to create question:', error);
+    return NextResponse.json({ message: 'Failed to create question', error: error.message }, { status: 500 });
   }
 }
