@@ -35,6 +35,7 @@ export default function Home() {
   const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [questions, setQuestions] = useState([]);
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -51,9 +52,24 @@ export default function Home() {
     }
   };
 
+  const fetchQuestions = async (BookId) => {
+    console.log(BookId);
+    const res = await fetch(`/api/questions?BookId=${BookId}`);
+    const data = await res.json();
+  
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    console.log(data.data);
+    setQuestions(data.data);
+    // return data;
+  };
+
   const goToQuestion = async (bookId) => {
+    setQuestions([]);
     router.push(`/question/${bookId}`);
-}
+  }
 
   return (
     <div>
@@ -86,24 +102,53 @@ export default function Home() {
 
               </CardContent>
               <CardFooter className={styles.cardFooter}>
-                <Dialog>
-                  <DialogTrigger>more info userid:{userId} bookId: {book.id}</DialogTrigger>
-                  <DialogContent>
-                      {book.volumeInfo.imageLinks?.thumbnail && (
-                        <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
-                      )}
-                      {book.volumeInfo.title}
-                      <p>by {book.volumeInfo.authors?.join(', ')}</p>
-                      Published: {book.volumeInfo.publishedDate}
-                    <DialogHeader>
-                      <DialogTitle>more info!</DialogTitle>
-                      <DialogDescription>
-                        more information will come soon
-                      </DialogDescription>
-                      <button onClick={() => goToQuestion(book.id)} type="submit">new Question</button>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
+              <Dialog>
+                <DialogTrigger>
+                  <button onClick={() => fetchQuestions(book.id)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">more info</button>
+                </DialogTrigger>
+                <DialogContent className="p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto">
+                  <div className="flex flex-col items-center">
+                    {book.volumeInfo.imageLinks?.thumbnail && (
+                      <img
+                        src={book.volumeInfo.imageLinks.thumbnail}
+                        alt={book.volumeInfo.title}
+                        className="w-32 h-48 object-cover rounded-lg mb-4"
+                      />
+                    )}
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">{book.volumeInfo.title}</h2>
+                    <p className="text-gray-600 mb-2">by {book.volumeInfo.authors?.join(', ')}</p>
+                    <p className="text-gray-500 mb-4">Published: {book.volumeInfo.publishedDate}</p>
+                  </div>
+
+                  <DialogHeader className="border-t border-gray-200 pt-4">
+                    <DialogTitle className="text-xl font-semibold text-gray-800">Discussion Questions</DialogTitle>
+                    <DialogDescription className="text-gray-600 mt-2">
+                      Questions from fellow book lovers
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="mt-4 max-h-40 overflow-y-auto">
+                    {questions.length > 0 ? (
+                      questions.map((question) => (
+                        <div key={question._id} className="p-4 mb-2 border border-gray-200 rounded-lg shadow-sm">
+                          {question.question}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">No questions available.</p>
+                    )}
+                  </div>
+                  <div className="flex justify-end gap-4">
+                      <button
+                        onClick={() => goToQuestion(book.id)}
+                        type="button"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                      >
+                        New Question
+                      </button>
+                  </div>
+                </DialogContent>
+              </Dialog>
               </CardFooter>
             </Card>
           ))}
