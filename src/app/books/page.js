@@ -1,6 +1,6 @@
 "use client";
 
-import styles from './styles.css';
+import styles from './styles.module.css';
 import { UserButton, auth, useAuth } from "@clerk/nextjs"
 import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
 
@@ -57,35 +57,35 @@ export default function Home() {
 
   return (
     <div>
-      <div className="search-container">
+      <div className={styles.searchContainer}>
         <Input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search for books..."
-          className="search-input"
+          className={styles.searchInput}
         />
-        <button onClick={fetchBooks} className="search-button">Search</button>
+        <button onClick={fetchBooks} className={styles.searchButton}>Search</button>
       </div>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid-container">
+        <div className={styles.gridContainer}>
           {books.map((book) => (
-            <Card key={book.id} className="card">
+            <Card key={book.id} className={styles.card}>
                 {book.volumeInfo.imageLinks?.thumbnail && (
                   <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} />
                 )}
-              <CardHeader>
-                <CardTitle>{book.volumeInfo.title}</CardTitle>
-                <CardDescription><p>by {book.volumeInfo.authors?.join(', ')}</p> </CardDescription>
+              <CardHeader className={styles.cardHeader}>
+                <CardTitle className={styles.cardTitle}>{book.volumeInfo.title}</CardTitle>
+                <CardDescription className={styles.cardDescription}><p>by {book.volumeInfo.authors?.join(', ')}</p> </CardDescription>
                 {/* <cardDescription>Published: {book.volumeInfo.publishedDate}</cardDescription> */}
               </CardHeader>
-              <CardContent>
-                <CardDescription>Published: {book.volumeInfo.publishedDate}</CardDescription>
+              <CardContent className={styles.cardContent}>
+                <CardDescription className={styles.cardDescriptions}>Published: {book.volumeInfo.publishedDate}</CardDescription>
 
               </CardContent>
-              <CardFooter>
+              <CardFooter className={styles.cardFooter}>
                 <Dialog>
                   <DialogTrigger>more info userid:{userId} bookId: {book.id}</DialogTrigger>
                   <DialogContent>

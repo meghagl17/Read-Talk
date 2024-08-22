@@ -1,0 +1,75 @@
+/* CardGrid.module.css */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 16px; /* Space between cards */
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* */
+/* img {
+  max-width: 100%; 
+  max-height: 150px; 
+}
+ */
+
+ .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Space between image and text */
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff; /* White background for cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for card */
+  transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition effects */
+  overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1rem; /* Optional: add space between image and content */
+  margin-top: 1rem; /* Optional: add space between image and content */
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between input and button */
+  margin-bottom: 20px; /* Space below the search bar */
+  max-width: 100vw;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 100vw; /* 3/4 of the viewport width */
+}
+
+.searchButton {
+  flex-shrink: 0; /* Prevent the button from shrinking */
+  padding: 8px 16px; /* Adjust padding as needed */
+}
+
+.cardHeader {
+  padding: 10px;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.cardDescription, .cardDescriptions {
+  font-size: 1rem;
+  color: #666;
+}
+
+.cardFooter {
+  margin-top: auto;
+}
