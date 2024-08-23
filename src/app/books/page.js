@@ -1,8 +1,9 @@
 "use client";
 
 import styles from './styles.module.css';
+import React, { useCallback } from 'react';
 import { UserButton, auth, useAuth } from "@clerk/nextjs"
-import { useRouter } from 'next/navigation';  // Use next/navigation for app directory routing
+import { useRouter, useSearchParams } from 'next/navigation';  // Use next/navigation for app directory routing
 
 import axios from 'axios';
 import { useState } from 'react';
@@ -69,6 +70,21 @@ export default function Home() {
   const goToQuestion = async (bookId) => {
     setQuestions([]);
     router.push(`/question/${bookId}`);
+  }
+
+  const searchParams = useSearchParams()
+  const createQueryString = useCallback(
+    (name, value) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+ 
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  const goToAnswer = async (bookId, questionId) => {
+    router.push(`/answers/${bookId}/?` + createQueryString('questionId', questionId))
   }
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -159,9 +175,9 @@ return (
           <div className="mt-4 max-h-40 overflow-y-auto">
             {questions.length > 0 ? (
               questions.map((question) => (
-                <div key={question._id} className="p-4 mb-2 border border-gray-200 rounded-lg shadow-sm">
+                <button key={question._id} onClick={() => goToAnswer(currentBook?.id, question._id)} className="p-4 mb-2 border border-gray-200 rounded-lg shadow-sm">
                   {question.question}
-                </div>
+                </button>
               ))
             ) : (
               <p className="text-gray-500">Be the first one to post a question!</p>
