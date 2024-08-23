@@ -20,3 +20,10 @@ when user clicks on a question to answer
     - send in the Question ID
     - query all the answers that are already there for the specific question
 
+
+answer -> 
+    _id:
+    answer:
+    questionId: 
+    userId: 
+    datePosted: (time now)

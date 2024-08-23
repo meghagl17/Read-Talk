@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import React, { useCallback } from 'react';
 import axios from 'axios';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { UserButton, useAuth } from '@clerk/nextjs';
 import {
   Card,
@@ -18,12 +17,13 @@ export default function Home() {
   const { isLoaded, userId } = useAuth();
   const params = useParams();
   const [param, setParam] = useState({ bookId: '' });
-  const [question, setQuestion] = useState('');
+
+  const [answers, setAnswers] = useState([]);
+  const [newAnswer, setNewAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState();
 
   const bookId = param.bookId;
-  const router = useRouter()
 
   const fetchBook = async (bookId) => {
     setLoading(true);
@@ -46,43 +46,32 @@ export default function Home() {
     }
   }, [bookId]);
 
-  const searchParams = useSearchParams()
-  const createQueryString = useCallback(
-    (name, value) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set(name, value)
- 
-      return params.toString()
-    },
-    [searchParams]
-  )
+  useEffect(() => {
+    setParam({ bookId: params.bookId });
+  }, [params.bookId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/questions', {
-        BookId: bookId,
-        question: question,
-        clerkUserID: userId, // Replace with actual Clerk user ID
+      const response = await axios.post('/api/answers', {
+        questionId: questionId, // This should match the schema's questionId
+        clerkUserID: userId,
+        answer: newAnswer, // This is the user's answer text // This is the Clerk user ID, as required by the schema
       });
-
+    
       console.log(response.data);
-      console.log(response.data.data._id);
-      console.log(`/answers/${book.id}/?` + createQueryString('questionId', response.data.data._id));
-      router.push(`/answers/${book.id}/?` + createQueryString('questionId', response.data.data._id))
       // Handle success, e.g., show a success message or redirect
     } catch (error) {
-      console.error('Error submitting question:', error);
+      console.error('Error submitting answer:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  useEffect(() => {
-    setParam({ bookId: params.bookId });
-  }, [params.bookId]);
+  const searchParams = useSearchParams()
+  const questionId = searchParams.get('questionId')
 
   return (
     <div className="flex *:max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg border border-gray-200">
@@ -95,7 +84,7 @@ export default function Home() {
           />
         )}
         <CardHeader className="p-4 border-b border-gray-200">
-          <CardTitle className="text-xl font-bold text-gray-800 mb-1">{book.volumeInfo.title}</CardTitle>
+          <CardTitle className="text-xl font-bold text-gray-800 mb-1">{book.volumeInfo.title} {questionId}</CardTitle>
           <CardDescription className="text-gray-600">
             <p>by {book.volumeInfo.authors?.join(', ')}</p>
           </CardDescription>
@@ -112,13 +101,13 @@ export default function Home() {
       
       <div>
         <h1 className="text-2xl font-semibold mb-4 text-center text-gray-800">
-          Submit Your Question
+          Submit Your Answer
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
-            placeholder="Enter your question..."
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="Enter your Answer..."
+            value={newAnswer}
+            onChange={(e) => setNewAnswer(e.target.value)}
             required
             className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
           />
