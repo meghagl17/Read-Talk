@@ -22,6 +22,8 @@ export default function Home() {
   const [newAnswer, setNewAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState();
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState();
 
   const bookId = param.bookId;
 
@@ -38,6 +40,20 @@ export default function Home() {
       setLoading(false);
       console.error("Error fetching Book:", error);
     }
+  };
+
+  const fetchQuestions = async (BookId) => {
+    console.log(BookId);
+    const res = await fetch(`/api/questions?BookId=${BookId}`);
+    const data = await res.json();
+  
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    console.log(data.data);
+    setQuestions(data.data);
+    // return data;
   };
 
   const fetchAnswers = async (questionId) => {
@@ -57,6 +73,7 @@ export default function Home() {
   useEffect(() => {
     if(bookId){
       fetchBook(bookId);
+      fetchQuestions(bookId);
       fetchAnswers(questionId);
     }
   }, [bookId]);
@@ -100,75 +117,102 @@ export default function Home() {
   }, [answers]);
 
   return (
-    <div className="flex flex-col max-w-4xl mx-auto p-6 bg-gray-100 shadow-lg rounded-lg border border-gray-200">
-      <div className="flex flex-row space-x-6">
-        {/* Book Info Section */}
-        <div className="flex-none w-1/3 bg-white rounded-lg shadow-md p-4">
-          {book && book.volumeInfo.imageLinks?.thumbnail && (
-            <img
-              src={book.volumeInfo.imageLinks.thumbnail}
-              alt={book.volumeInfo.title}
-              className="w-full h-auto object-cover rounded-lg mb-4"
-            />
-          )}
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{book?.volumeInfo.title}</h2>
-          <p className="text-gray-700">by {book?.volumeInfo.authors?.join(', ')}</p>
-          <p className="text-gray-500 mt-2">Published: {book?.volumeInfo.publishedDate}</p>
+    <div className="max-w-3xl mx-auto p-4 space-y-6">
+      {/* Book Info Section */}
+      <div className="flex items-center gap-4 bg-[#f8fafb] px-4 min-h-14 justify-between">
+        {book && book.volumeInfo.imageLinks?.thumbnail && (
+          <img
+            src={book.volumeInfo.imageLinks.thumbnail}
+            alt={book.volumeInfo.title}
+            className="w-14 h-20 object-cover rounded"
+          />
+        )}
+        <div>
+          <h2 className="text-xl text-gray-800">{book?.volumeInfo.title}</h2>
         </div>
-
-        {/* Messages Section */}
-        <div className="flex-1 bg-white rounded-lg shadow-md p-4 flex flex-col">
-          <div className="flex-1 overflow-y-auto space-y-4 max-h-[500px] bg-gray-50 p-4 rounded-lg shadow-inner pr-20">
-            {answers.length > 0 ? (
-              answers.map((answer) => (
-                <div key={answer._id} className="flex items-start space-x-4 mb-4">
-                  {/* User Info */}
-                  <div className="flex-shrink-0 w-12 h-12 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center">
-                    <img
-                      src="https://via.placeholder.com/48" // Placeholder image
-                      alt="User Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+      </div>
+  
+      {/* Main Question Placeholder */}
+      <h2 class="text-[#0e141b] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">What is the significance of the lotus eaters in The Odyssey?</h2>
+  
+      {/* Chat Section */}
+      <div className="flex flex-col space-y-4">
+        {/* Chat Messages */}
+        <div className="flex-1 overflow-y-auto max-h-[400px] p-2 space-y-3">
+          {answers.length > 0 ? (
+            answers.map((answer) => (
+              <div key={answer._id} className="flex items-center space-x-3">
+                {/* User Info */}
+                <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
+                  <img
+                    src="https://via.placeholder.com/40" // Placeholder image
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Message Container */}
+                <div className="flex flex-col space-y-1">
+                  {/* User Name */}
+                  <div className="text-left text-[#4f7296] text-[13px] font-normal leading-normal max-w-[360px]">Bob</div>
                   {/* Message Bubble */}
-                  <div className="flex-1 bg-blue-100 text-gray-800 rounded-lg shadow-lg p-4 relative">
-                    <div className="absolute top-[-12px] left-[-12px] transform -translate-x-1/2 w-0 h-0 border-r-8 border-r-blue-100 border-t-8 border-t-transparent border-b-8 border-b-transparent"></div>
-                    <div className="font-semibold text-gray-900 mb-1 absolute top-[-24px] left-[-10px] text-xs">
-                      Bob
-                    </div>
-                    <div>{answer.answer}</div>
+                  <div className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#e8edf3] text-[#0e141b]">
+                    <p>{answer.answer}</p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 text-center">Be the first one to add to the discussion!</p>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
 
-          {/* Textbox and Send Button */}
-          <form onSubmit={handleSubmit} className="mt-4 flex items-center space-x-2 bg-white p-4 rounded-lg shadow-lg">
-            <textarea
-              placeholder="Type your message..."
-              value={newAnswer}
-              onChange={(e) => setNewAnswer(e.target.value)}
-              required
-              className="flex-1 h-16 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
-            />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400">Be the first one to add to the discussion!</p>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+  
+        {/* Textbox and Send Button */}
+        <form onSubmit={handleSubmit} className="flex space-x-2 p-2 rounded-xl bg-[#e8edf3]">
+          {/* Textarea */}
+          <textarea
+            placeholder="Type your message..."
+            value={newAnswer}
+            onChange={(e) => setNewAnswer(e.target.value)}
+            required
+            className="flex-1 min-w-0 resize-none overflow-hidden rounded-xl text-[#0e141b] placeholder:text-[#4f7296] px-4 py-2 bg-[#e8edf3] border-none focus:outline-none focus:ring-0 text-base font-normal leading-normal"
+          />
+          
+          {/* Button and Additional Controls */}
+          <div className="flex items-center border-none bg-[#e8edf3] rounded-r-xl">
             <button
               type="submit"
               disabled={loading}
-              className={`w-24 py-2 text-white font-semibold rounded-lg ${
-                loading
-                  ? 'bg-gray-500 cursor-not-allowed'
-                  : 'bg-blue-500 hover:bg-blue-600'
-              } transition duration-300 ease-in-out`}
+              className={`flex items-center justify-center p-1.5 rounded-xl h-8 px-4 bg-[#368ce7] text-[#f8fafb] text-sm font-medium leading-normal ${
+                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-400 hover:bg-blue-500'
+              }`}
             >
-              {loading ? 'Sending...' : 'Send'}
+              Send
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
+      </div>
+  
+      {/* Other Questions Section */}
+      <div className="flex flex-col space-y-3">
+        <h3 className="text-lg text-gray-700">Other Questions</h3>
+        {questions.length > 0 ? (
+          <div className="space-y-3 overflow-y-auto max-h-60">
+            {questions.map((question) => (
+              <div
+                key={question._id}
+                className="p-3 bg-gray-100 rounded"
+              >
+                <p className="text-base text-gray-800">{question.question}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-400">No other questions posted yet. Be the first to start the discussion!</p>
+        )}
       </div>
     </div>
   );
+  
 }

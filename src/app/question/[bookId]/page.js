@@ -21,6 +21,7 @@ export default function Home() {
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState();
+  const [questions, setQuestions] = useState([]);
 
   const bookId = param.bookId;
   const router = useRouter()
@@ -33,16 +34,32 @@ export default function Home() {
       const response = await axios.post(url, { volumeId: bookId });
       console.log(response.data);
       setBook(response.data);
-      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.error("Error fetching Book:", error);
     }
   };
 
+  const fetchQuestions = async (BookId) => {
+    console.log(BookId);
+    const res = await fetch(`/api/questions?BookId=${BookId}`);
+    const data = await res.json();
+  
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    console.log(data.data);
+    setQuestions(data.data);
+    setLoading(false);
+    // return data;
+  };
+
   useEffect(() => {
     if(bookId){
+      setLoading(true);
       fetchBook(bookId);
+      fetchQuestions(bookId);
     }
   }, [bookId]);
 
@@ -85,56 +102,75 @@ export default function Home() {
   }, [params.bookId]);
 
   return (
-    <div className="flex *:max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg border border-gray-200">
-      {book && book.volumeInfo ? (<Card key={book.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-        {book.volumeInfo.imageLinks?.thumbnail && (
-          <img
-            src={book.volumeInfo.imageLinks.thumbnail}
-            alt={book.volumeInfo.title}
-            className="w-full h-auto object-cover"
-          />
+    <div className="flex flex-col lg:flex-row gap-8 p-6 bg-gray-100 min-h-[80vh]">
+      {/* Book Information Section */}
+      <div className="w-full lg:w-1/3 bg-white shadow-md rounded-lg p-6">
+        {book && book.volumeInfo ? (
+          <>
+            {book.volumeInfo.imageLinks?.thumbnail && (
+              <img
+                src={book.volumeInfo.imageLinks.thumbnail}
+                alt={book.volumeInfo.title}
+                className="w-full h-auto object-cover mb-4 rounded-lg"
+              />
+            )}
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">{book.volumeInfo.title}</h1>
+            <p className="text-lg text-gray-600 mb-2">by {book.volumeInfo.authors?.join(', ')}</p>
+            <p className="text-md text-gray-500 mb-4">Published: {book.volumeInfo.publishedDate}</p>
+          </>
+        ) : (
+          <p>Loading book information...</p>
         )}
-        <CardHeader className="p-4 border-b border-gray-200">
-          <CardTitle className="text-xl font-bold text-gray-800 mb-1">{book.volumeInfo.title}</CardTitle>
-          <CardDescription className="text-gray-600">
-            <p>by {book.volumeInfo.authors?.join(', ')}</p>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4">
-          <CardDescription className="text-gray-500">
-            Published: {book.volumeInfo.publishedDate}
-          </CardDescription>
-        </CardContent>
-        <CardFooter className="p-4 border-t border-gray-200">
-          {/* Optional footer content */}
-        </CardFooter>
-      </Card>) : (null)}
-      
-      <div>
-        <h1 className="text-2xl font-semibold mb-4 text-center text-gray-800">
-          Submit Your Question
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <textarea
-            placeholder="Enter your question..."
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            required
-            className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 text-white font-semibold rounded-lg ${
-              loading
-                ? 'bg-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
-            } transition duration-300 ease-in-out`}
-          >
-            {loading ? 'Submitting...' : 'Submit New Question'}
-          </button>
-        </form>
+      </div>
+  
+      {/* Questions Section */}
+      <div className="flex-1 flex flex-col">
+        <div className="bg-white shadow-md rounded-lg p-6 mb-4 flex-1">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Discussion Questions</h2>
+  
+          {/* Existing Questions */}
+          {questions.length > 0 ? (
+            <div className="space-y-4 overflow-y-auto max-h-80 pr-2">
+              {questions.map((question) => (
+                <div
+                  key={question._id}
+                  className="border border-gray-300 p-4 rounded-lg shadow-sm bg-gray-50"
+                >
+                  <p className="text-lg font-medium text-gray-900 mb-2">{question.question}</p>
+                </div>
+              ))}
+              
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              {loading ? <p>loading questions...</p> : <p className="text-gray-500">No questions posted yet. Be the first to start the discussion!</p>}
+            </div>
+          )}
+        </div>
+  
+        {/* New Question Form */}
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Post a New Question</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <textarea
+              placeholder="Enter your question..."
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              required
+              className="w-full h-20 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 text-white font-semibold rounded-lg transition ${
+                loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+            >
+              Submit Question
+            </button>
+          </form>
+        </div>
       </div>
     </div>
-  );  
+  );
 }

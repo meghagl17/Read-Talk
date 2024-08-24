@@ -165,31 +165,44 @@ return (
             <p className="text-gray-500 mb-4">Published: {currentBook?.volumeInfo.publishedDate}</p>
           </div>
 
-          <DialogHeader className="border-t border-gray-200 pt-4">
-            <DialogTitle className="text-xl font-semibold text-gray-800">Discussion Questions</DialogTitle>
+          {/* <DialogHeader className="border-t border-gray-200 pt-4"> */}
+            {/* <DialogTitle className="text-xl font-semibold text-gray-800">Discussion Questions</DialogTitle>
             <DialogDescription className="text-gray-600 mt-2">
               Questions from fellow book lovers
-            </DialogDescription>
-          </DialogHeader>
+            </DialogDescription> */}
+          {/* </DialogHeader> */}
 
-          <div className="mt-4 max-h-40 overflow-y-auto">
+          <div className="mt-0 max-h-60 overflow-y-auto">
             {questions.length > 0 ? (
               questions.map((question) => (
-                <button key={question._id} onClick={() => goToAnswer(currentBook?.id, question._id)} className="p-4 mb-2 border border-gray-200 rounded-lg shadow-sm">
-                  {question.question}
-                </button>
+                <div key={question._id} className="flex gap-4 bg-white px-4 py-3 justify-between mb-2 shadow-sm">
+                  <div className="flex flex-1 flex-col justify-center">
+                    <p className="text-[#181411] text-base font-medium leading-normal">{question.question}</p>
+                  </div>
+                  <div className="shrink-0">
+                    <button onClick={() => goToAnswer(currentBook?.id, question._id)} className="text-[#181411] flex size-7 items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               ))
             ) : (
-              <p className="text-gray-500">Be the first one to post a question!</p>
+              <div className="flex gap-4 bg-white px-4 py-3 justify-between mb-2 shadow-sm">
+                <div className="flex flex-1 flex-col justify-center">
+                <p className="text-[#181411] text-base font-medium leading-normal text-center">
+                  Be the first one to post a discussion question!
+                </p>
+                </div>
+              </div>
             )}
           </div>
-          <div className="flex justify-end gap-4">
-            <button
-              onClick={() => goToQuestion(currentBook?.id)}
-              type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+          <div class="flex px-4 py-3">
+            <button onClick={() => goToQuestion(currentBook?.id)}
+              class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-blue-500 text-white text-base font-bold leading-normal tracking-[0.015em]  hover:bg-blue-600 transition"
             >
-              New Question
+              <span class="truncate">Post New Question</span>
             </button>
           </div>
         </DialogContent>
