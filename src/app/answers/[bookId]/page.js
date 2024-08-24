@@ -24,7 +24,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [book, setBook] = useState();
   const [questions, setQuestions] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState();
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [questionId, setQuestionId] = useState();
 
   let bookId = param.bookId;
 
@@ -57,6 +58,21 @@ export default function Home() {
     // return data;
   };
 
+  const fetchQuestion = async (QuestionId) => {
+    console.log(QuestionId);
+    const res = await fetch(`/api/questions?QuestionId=${QuestionId}`);
+    const data = await res.json();
+  
+    if (!res.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    console.log(data);
+    console.log(data.data);
+    setCurrentQuestion(data.data);
+    // return data;
+  };
+
   const fetchAnswers = async (questionId) => {
     console.log(questionId);
     const res = await fetch(`/api/answers?QuestionId=${questionId}`);
@@ -73,12 +89,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if(bookId){
+    if(bookId && questionId){
       fetchBook(bookId);
       fetchQuestions(bookId);
+      fetchQuestion(questionId);
       fetchAnswers(questionId);
     }
-  }, [bookId]);
+  }, [bookId, questionId]);
 
   useEffect(() => {
     setParam({ bookId: params.bookId });
@@ -114,7 +131,6 @@ export default function Home() {
     console.log(questionId);
   }
 
-  const [questionId, setQuestionId] = useState();
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -157,7 +173,7 @@ export default function Home() {
       </div>
   
       {/* Main Question Placeholder */}
-      <h2 class="text-[#0e141b] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">What is the significance of the lotus eaters in The Odyssey?</h2>
+      {currentQuestion && <h2 className="text-[#0e141b] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">{currentQuestion.question}</h2>}
   
       {/* Chat Section */}
       <div className="flex flex-col space-y-4">

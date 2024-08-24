@@ -25,3 +25,25 @@ export async function getQuestionsByBookId(BookId) {
     throw new Error('Failed to fetch questions');
   }
 }
+
+// Fetch question by QuestionID
+export async function getQuestionsByQuestionId(questionId) {
+  try {
+    await connect(); // Ensure the database connection is established
+
+    // if (!mongoose.Types.ObjectId.isValid(questionId)) {
+    //   throw new Error('Invalid questionId');
+    // }
+
+    const question = await Question.findOne({ _id: questionId }).exec();
+
+    if (!question) {
+      throw new Error('Question not found');
+    }
+
+    return question;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Failed to fetch questions');
+  }
+}
