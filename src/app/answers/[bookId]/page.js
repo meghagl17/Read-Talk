@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { UserButton, useAuth } from '@clerk/nextjs';
 import {
   Card,
@@ -14,6 +14,7 @@ import {
 } from "../../../components/ui/card"
 
 export default function Home() {
+  const router = useRouter(); 
   const { isLoaded, userId } = useAuth();
   const params = useParams();
   const [param, setParam] = useState({ bookId: '' });
@@ -25,7 +26,7 @@ export default function Home() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState();
 
-  const bookId = param.bookId;
+  let bookId = param.bookId;
 
   const fetchBook = async (bookId) => {
     setLoading(true);
@@ -62,6 +63,7 @@ export default function Home() {
     const data = await res.json();
   
     if (!res.ok) {
+      setAnswers([]);
       throw new Error(data.message || 'Something went wrong');
     }
 
@@ -96,6 +98,7 @@ export default function Home() {
       console.log(response.data);
       console.log(answers);
       setAnswers(prevAnswers => [...prevAnswers, response.data.data]);
+      setNewAnswer('');
       // Handle success, e.g., show a success message or redirect
     } catch (error) {
       console.error('Error submitting answer:', error);
@@ -104,8 +107,29 @@ export default function Home() {
     }
   }
 
+  const goToQuestion = async (newQuestionId) => {
+    console.log("in this function");
+    console.log(questionId);
+    setQuestionId(newQuestionId);
+    console.log(questionId);
+  }
+
+  const [questionId, setQuestionId] = useState();
   const searchParams = useSearchParams()
-  const questionId = searchParams.get('questionId')
+
+  useEffect(() => {
+    const id = searchParams.get('questionId');
+    if (id) {
+      setQuestionId(id);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    console.log("calling this useEffect");
+    if (questionId) {
+      fetchAnswers(questionId);
+    }
+  }, [questionId]);
 
   const messagesEndRef = useRef(null);
 
@@ -195,21 +219,35 @@ export default function Home() {
       </div>
   
       {/* Other Questions Section */}
-      <div className="flex flex-col space-y-3">
-        <h3 className="text-lg text-gray-700">Other Questions</h3>
+      <div className="flex flex-col space-y-4 p-4 rounded-lg">
+        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-tight px-4 pb-2 pt-4">
+          Other Questions
+        </h3>
         {questions.length > 0 ? (
-          <div className="space-y-3 overflow-y-auto max-h-60">
+          <div className="space-y-2 overflow-y-auto max-h-80">
             {questions.map((question) => (
-              <div
+              <button
+                onClick={() => goToQuestion(question._id)}
                 key={question._id}
-                className="p-3 bg-gray-100 rounded"
+                className="flex items-center gap-4 bg-[#f8fafb] px-4 min-h-[72px] py-2 rounded-lg shadow-sm"
               >
-                <p className="text-base text-gray-800">{question.question}</p>
-              </div>
+                {book && book.volumeInfo.imageLinks?.thumbnail && <div
+                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
+                  style={{ backgroundImage: `url(${book.volumeInfo.imageLinks.thumbnail})` }}
+                ></div>}
+                <div className="flex flex-col justify-center">
+                {book && book.volumeInfo.imageLinks?.thumbnail && <p className="text-[#4f7296] text-sm font-normal leading-normal line-clamp-2">
+                    {book.volumeInfo.title}
+                  </p>}
+                  <p className="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">
+                    {question.question}
+                  </p>
+                </div>
+              </button>
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No other questions posted yet. Be the first to start the discussion!</p>
+          <p className="text-[#4f7296] text-sm">No other questions posted yet. Be the first to start the discussion!</p>
         )}
       </div>
     </div>
