@@ -3,11 +3,12 @@ import { createAnswer, getAnswersByQuestionId } from '../../../lib/actions/answe
 
 export async function POST(request) {
   try {
-    const { questionId, clerkUserID, answer } = await request.json();
-
+    console.log(request);
+    const { questionId, clerkUserID, answer, name } = await request.json();
+    console.log(name);
     // Create a new answer using the action
-    const newAnswer = await createAnswer({ questionId, clerkUserID, answer });
-
+    const newAnswer = await createAnswer({ questionId, clerkUserID, answer, name });
+    console.log(newAnswer);
     return NextResponse.json({ message: 'Answer created successfully!', data: newAnswer }, { status: 201 });
   } catch (error) {
     console.error('Failed to create answer:', error);

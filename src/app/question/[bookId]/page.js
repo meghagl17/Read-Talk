@@ -14,12 +14,14 @@ import {
   CardTitle,
 } from "../../../components/ui/card"
 
+import Spinner from '../../../components/loadingUi.jsx'
+
 export default function Home() {
   const { isLoaded, userId } = useAuth();
   const params = useParams();
   const [param, setParam] = useState({ bookId: '' });
   const [question, setQuestion] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [book, setBook] = useState();
   const [questions, setQuestions] = useState([]);
 
@@ -27,7 +29,6 @@ export default function Home() {
   const router = useRouter()
 
   const fetchBook = async (bookId) => {
-    setLoading(true);
     try {
       const url = `/api/books`;
       console.log(url);
@@ -35,7 +36,6 @@ export default function Home() {
       console.log(response.data);
       setBook(response.data);
     } catch (error) {
-      setLoading(false);
       console.error("Error fetching Book:", error);
     }
   };
@@ -46,6 +46,7 @@ export default function Home() {
     const data = await res.json();
   
     if (!res.ok) {
+      setLoading(false);
       throw new Error(data.message || 'Something went wrong');
     }
 
@@ -57,7 +58,6 @@ export default function Home() {
 
   useEffect(() => {
     if(bookId){
-      setLoading(true);
       fetchBook(bookId);
       fetchQuestions(bookId);
     }
@@ -76,7 +76,6 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       const response = await axios.post('/api/questions', {
@@ -93,7 +92,6 @@ export default function Home() {
     } catch (error) {
       console.error('Error submitting question:', error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -102,8 +100,10 @@ export default function Home() {
   }, [params.bookId]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 p-6 bg-gray-100 min-h-[80vh]">
-      {/* Book Information Section */}
+    <>
+    {loading ? (<Spinner />) : (
+    <div className="flex flex-col lg:flex-row gap-8 p-6 bg-gray-100 min-h-[80vh]" style={{ boxShadow: '0 4px 8px rgba(0, 0, 255, 0.3)' }}>
+      <>
       <div className="w-full lg:w-1/3 bg-white shadow-md rounded-lg p-6">
         {book && book.volumeInfo ? (
           <>
@@ -114,19 +114,18 @@ export default function Home() {
                 className="w-full h-auto object-cover mb-4 rounded-lg"
               />
             )}
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">{book.volumeInfo.title}</h1>
-            <p className="text-lg text-gray-600 mb-2">by {book.volumeInfo.authors?.join(', ')}</p>
-            <p className="text-md text-gray-500 mb-4">Published: {book.volumeInfo.publishedDate}</p>
+            <h1 className="text-2xl font-medium text-gray-800 mb-2">{book.volumeInfo.title}</h1>
+            <p className="text-lg font-medium text-gray-600 mb-2">by {book.volumeInfo.authors?.join(', ')}</p>
+            <p className="text-sm font-medium text-gray-500 mb-4">Published: {book.volumeInfo.publishedDate}</p>
           </>
         ) : (
           <p>Loading book information...</p>
         )}
       </div>
   
-      {/* Questions Section */}
       <div className="flex-1 flex flex-col">
         <div className="bg-white shadow-md rounded-lg p-6 mb-4 flex-1">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Discussion Questions</h2>
+          <h2 className="text-xl font-medium text-gray-800 mb-4">Discussion Questions</h2>
   
           {/* Existing Questions */}
           {questions.length > 0 ? (
@@ -134,9 +133,10 @@ export default function Home() {
               {questions.map((question) => (
                 <div
                   key={question._id}
-                  className="border border-gray-300 p-4 rounded-lg shadow-sm bg-gray-50"
+                  className="border border-gray-300 p-4 rounded-lg bg-gray-50"
+                  style={{ boxShadow: '2px 2px 4px rgba(0, 0, 255, 0.2)' }}
                 >
-                  <p className="text-lg font-medium text-gray-900 mb-2">{question.question}</p>
+                  <p className="text-sm font-medium text-gray-900 mb-2">{question.question}</p>
                 </div>
               ))}
               
@@ -150,19 +150,25 @@ export default function Home() {
   
         {/* New Question Form */}
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Post a New Question</h2>
+          <h2 className="text-xl font-medium text-gray-800 mb-4 text-center ">Post a New Question</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <textarea
               placeholder="Enter your question..."
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               required
-              className="w-full h-20 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+              className="w-full h-20 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium text-sm font-medium"
+              />
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 text-white font-semibold rounded-lg transition ${
+              className={`w-full py-3 text-white rounded-lg transition text-sm font-medium ${
                 loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
               }`}
             >
@@ -171,6 +177,8 @@ export default function Home() {
           </form>
         </div>
       </div>
-    </div>
+      </>
+    </div>)}
+    </>
   );
 }

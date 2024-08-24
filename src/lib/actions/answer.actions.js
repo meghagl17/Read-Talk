@@ -3,10 +3,12 @@
 import Answer from "../modals/answer.modal"; // Adjust the path based on your file structure
 import { connect } from "../db";
 
-export async function createAnswer({ questionId, clerkUserID, answer }) {
+export async function createAnswer({ questionId, clerkUserID, answer, name }) {
   try {
     await connect(); // Ensure the database connection is established
-    const newAnswer = await Answer.create({ questionId, clerkUserID, answer });
+    console.log(name);
+    const newAnswer = await Answer.create({ questionId, clerkUserID, answer, name });
+    console.log(newAnswer);
     return JSON.parse(JSON.stringify(newAnswer));
   } catch (error) {
     console.log(error);

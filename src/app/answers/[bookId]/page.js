@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { UserButton, useAuth } from '@clerk/nextjs';
+import { UserButton, useAuth, useUser } from '@clerk/nextjs';
 import {
   Card,
   CardContent,
@@ -13,33 +13,37 @@ import {
   CardTitle,
 } from "../../../components/ui/card"
 
+import Spinner from '../../../components/loadingUi.jsx'
+
+import { CircleUserRound } from 'lucide-react';
+
 export default function Home() {
   const router = useRouter(); 
-  const { isLoaded, userId } = useAuth();
+  // const { isLoaded, userId } = useAuth();
+  const { isLoaded, isSignedIn, user } = useUser();
+
   const params = useParams();
   const [param, setParam] = useState({ bookId: '' });
 
   const [answers, setAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [book, setBook] = useState();
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionId, setQuestionId] = useState();
+  
 
   let bookId = param.bookId;
 
   const fetchBook = async (bookId) => {
-    setLoading(true);
     try {
       const url = `/api/books`;
       console.log(url);
       const response = await axios.post(url, { volumeId: bookId });
       console.log(response.data);
       setBook(response.data);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.error("Error fetching Book:", error);
     }
   };
@@ -80,15 +84,18 @@ export default function Home() {
   
     if (!res.ok) {
       setAnswers([]);
+      setLoading(false);
       throw new Error(data.message || 'Something went wrong');
     }
 
     console.log(data.data);
     setAnswers(data.data);
+    setLoading(false);
     // return data;
   };
 
   useEffect(() => {
+    setLoading(true);
     if(bookId && questionId){
       fetchBook(bookId);
       fetchQuestions(bookId);
@@ -103,13 +110,13 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const answer = newAnswer
     try {
       const response = await axios.post('/api/answers', {
         questionId: questionId, // This should match the schema's questionId
-        clerkUserID: userId,
+        clerkUserID: user.id,
         answer: newAnswer, // This is the user's answer text // This is the Clerk user ID, as required by the schema
+        name: user.firstName,
       });
       
       console.log(response.data);
@@ -120,7 +127,6 @@ export default function Home() {
     } catch (error) {
       console.error('Error submitting answer:', error);
     } finally {
-      setLoading(false);
     }
   }
 
@@ -157,116 +163,122 @@ export default function Home() {
   }, [answers]);
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-6">
-      {/* Book Info Section */}
-      <div className="flex items-center gap-4 bg-[#f8fafb] px-4 min-h-14 justify-between">
-        {book && book.volumeInfo.imageLinks?.thumbnail && (
-          <img
-            src={book.volumeInfo.imageLinks.thumbnail}
-            alt={book.volumeInfo.title}
-            className="w-14 h-20 object-cover rounded"
-          />
-        )}
-        <div>
-          <h2 className="text-xl text-gray-800">{book?.volumeInfo.title}</h2>
+    <div className="w-full mx-auto p-4 h-[calc(100vh-90px)] flex flex-col">
+      {loading ? (< Spinner />) : (
+      <div className="flex flex-col lg:flex-row gap-6 h-full">
+        {/* Book Info Section */}
+        <div className="w-full lg:w-2/5 bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col h-full">
+          <div className="flex items-center gap-2 mb-4">
+            {book && book.volumeInfo.imageLinks?.thumbnail && (
+              <img
+                src={book.volumeInfo.imageLinks.thumbnail}
+                alt={book.volumeInfo.title}
+                className="w-28 h-40 object-cover rounded"
+              />
+            )}
+            <div>
+              <h2 className="text-lg font-medium text-gray-800">{book?.volumeInfo.title}</h2>
+              <h2 className="text-sm font-medium text-gray-500">By: {book?.volumeInfo.authors?.join(', ')}</h2>
+            </div>
+          </div>
+  
+          {/* Other Questions Section */}
+          <div className="flex-col space-y-4 flex-1 overflow-auto">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Other Questions</h3>
+            {questions.length > 0 ? (
+              <div className="space-y-2 overflow-y-auto max-h-full">
+                {questions.map((question) => (
+                  <button
+                    onClick={() => goToQuestion(question._id)}
+                    key={question._id}
+                    className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-lg shadow-sm w-full max-w-md h-16"
+                  >
+                    <div className="flex flex-col justify-center w-full">
+                      <p className="text-gray-800 text-base font-medium">
+                        {question.question}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600 text-sm">No other questions posted yet. Be the first to start the discussion!</p>
+            )}
+          </div> 
         </div>
-      </div>
   
-      {/* Main Question Placeholder */}
-      {currentQuestion && <h2 className="text-[#0e141b] tracking-light text-[28px] font-bold leading-tight px-4 text-left pb-3 pt-5">{currentQuestion.question}</h2>}
+        {/* Chat Box */}
+        
+        <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col h-full">
+          {/* Main Question Placeholder */}
+          {currentQuestion && (
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">{currentQuestion.question}</h2>
+          )}
   
-      {/* Chat Section */}
-      <div className="flex flex-col space-y-4">
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto max-h-[400px] p-2 space-y-3">
-          {answers.length > 0 ? (
-            answers.map((answer) => (
-              <div key={answer._id} className="flex items-center space-x-3">
-                {/* User Info */}
-                <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-                  <img
-                    src="https://via.placeholder.com/40" // Placeholder image
-                    alt="User Avatar"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Message Container */}
-                <div className="flex flex-col space-y-1">
-                  {/* User Name */}
-                  <div className="text-left text-[#4f7296] text-[13px] font-normal leading-normal max-w-[360px]">Bob</div>
-                  {/* Message Bubble */}
-                  <div className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#e8edf3] text-[#0e141b]">
-                    <p>{answer.answer}</p>
+          <hr className="my-4 border-t border-gray-300" />
+  
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-2 space-y-3">
+            {answers.length > 0 ? (
+              answers.map((answer) => (
+                <div key={answer._id} className="flex items-center space-x-3">
+                  {/* User Info */}
+                  <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
+                  <CircleUserRound strokeWidth={1.3} className="w-full h-full object-cover"></CircleUserRound>
+                  </div>
+                  {/* Message Container */}
+                  <div className="flex flex-col space-y-1">
+                    {/* User Name */}
+                    <div className="text-left text-blue-600 text-xs font-normal max-w-[360px]">{answer.name}</div>
+                    {/* Message Bubble */}
+                    <div className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-gray-200 text-gray-800">
+                      <p>{answer.answer}</p>
+                    </div>
                   </div>
                 </div>
-
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-400">Be the first one to add to the discussion!</p>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+              ))
+            ) : (
+              <p className="text-sm font-medium text-gray-400">Be the first one to add to the discussion!</p>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
   
-        {/* Textbox and Send Button */}
-        <form onSubmit={handleSubmit} className="flex space-x-2 p-2 rounded-xl bg-[#e8edf3]">
-          {/* Textarea */}
-          <textarea
-            placeholder="Type your message..."
-            value={newAnswer}
-            onChange={(e) => setNewAnswer(e.target.value)}
-            required
-            className="flex-1 min-w-0 resize-none overflow-hidden rounded-xl text-[#0e141b] placeholder:text-[#4f7296] px-4 py-2 bg-[#e8edf3] border-none focus:outline-none focus:ring-0 text-base font-normal leading-normal"
-          />
-          
-          {/* Button and Additional Controls */}
-          <div className="flex items-center border-none bg-[#e8edf3] rounded-r-xl">
+          {/* Textbox and Send Button */}
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center justify-between p-2 rounded-lg bg-gray-100"
+          >
+            {/* Textarea */}
+            <textarea
+              placeholder="Type your message..."
+              value={newAnswer}
+              onChange={(e) => setNewAnswer(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+              required
+              className="flex-1 min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 px-4 py-2 bg-gray-100 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium text-sm font-medium"
+            />
+            
+            {/* Button and Additional Controls */}
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center justify-center p-1.5 rounded-xl h-8 px-4 bg-[#368ce7] text-[#f8fafb] text-sm font-medium leading-normal ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-400 hover:bg-blue-500'
+              className={`flex items-center justify-center p-1.5 rounded-lg h-8 px-4 bg-blue-500 text-white text-sm font-medium ${
+                loading ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-600'
               }`}
             >
               Send
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-  
-      {/* Other Questions Section */}
-      <div className="flex flex-col space-y-4 p-4 rounded-lg">
-        <h3 className="text-[#0e141b] text-lg font-bold leading-tight tracking-tight px-4 pb-2 pt-4">
-          Other Questions
-        </h3>
-        {questions.length > 0 ? (
-          <div className="space-y-2 overflow-y-auto max-h-80">
-            {questions.map((question) => (
-              <button
-                onClick={() => goToQuestion(question._id)}
-                key={question._id}
-                className="flex items-center gap-4 bg-[#f8fafb] px-4 min-h-[72px] py-2 rounded-lg shadow-sm"
-              >
-                {book && book.volumeInfo.imageLinks?.thumbnail && <div
-                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-14 h-14"
-                  style={{ backgroundImage: `url(${book.volumeInfo.imageLinks.thumbnail})` }}
-                ></div>}
-                <div className="flex flex-col justify-center">
-                {book && book.volumeInfo.imageLinks?.thumbnail && <p className="text-[#4f7296] text-sm font-normal leading-normal line-clamp-2">
-                    {book.volumeInfo.title}
-                  </p>}
-                  <p className="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">
-                    {question.question}
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <p className="text-[#4f7296] text-sm">No other questions posted yet. Be the first to start the discussion!</p>
-        )}
-      </div>
+      )}
     </div>
   );
+  
   
 }

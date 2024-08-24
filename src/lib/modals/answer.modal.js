@@ -19,6 +19,9 @@ const AnswerSchema = new Schema({
   answer: {
     type: String,
     required: true,
+  },
+  name: {
+    type: String,
   }
 });
 
