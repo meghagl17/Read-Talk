@@ -3,22 +3,29 @@
 import React from 'react';
 import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
+import { Pacifico } from 'next/font/google'
+
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export function Navbar() {
   const { isLoaded, userId } = useAuth();
 
   return (
-    <div className="w-full bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 p-4 shadow-lg">
+    <div className="w-full p-4 shadow-lg" style={{ backgroundColor: '#c6e5f3' }}>
       <div className="flex flex-row justify-between items-center max-w-7xl mx-auto">
         {/* Brand Name */}
-        <h3 className="scroll-m-20 text-3xl font-extrabold text-white tracking-tight">
+        <h3 className={`${pacifico.className} scroll-m-20 text-3xl font-extrabold text-white tracking-tight`} style={{color: '#3b4a73'}}>
           BookTalk
         </h3>
 
         {/* Links */}
         <div className="flex items-center space-x-8">
           <Link href="/" passHref>
-            <div className="text-white text-lg cursor-pointer hover:text-gray-200 transition-colors duration-300">
+            <div className={`${pacifico.className} cursor-pointer hover:text-gray-200 transition-colors duration-300`} style={{color: '#3b4a73'}}>
               Home
             </div>
           </Link>

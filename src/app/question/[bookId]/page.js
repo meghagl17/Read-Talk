@@ -16,6 +16,14 @@ import {
 
 import Spinner from '../../../components/loadingUi.jsx'
 
+import { Pacifico } from 'next/font/google'
+
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function Home() {
   const { isLoaded, userId } = useAuth();
   const params = useParams();
@@ -102,7 +110,10 @@ export default function Home() {
   return (
     <>
     {loading ? (<Spinner />) : (
-    <div className="flex flex-col lg:flex-row gap-8 p-6 bg-gray-100 min-h-[80vh]" style={{ boxShadow: '0 4px 8px rgba(0, 0, 255, 0.3)' }}>
+    <div className="flex flex-col lg:flex-row gap-8 p-6 min-h-[80vh]"
+    style={{
+      boxShadow: '0 16px 25px rgba(59, 74, 115, 0.3)'
+    }}>
       <>
       <div className="w-full lg:w-1/3 bg-white shadow-md rounded-lg p-6">
         {book && book.volumeInfo ? (
@@ -114,7 +125,7 @@ export default function Home() {
                 className="w-full h-auto object-cover mb-4 rounded-lg"
               />
             )}
-            <h1 className="text-2xl font-medium text-gray-800 mb-2">{book.volumeInfo.title}</h1>
+            <h1 className="text-2xl font-medium text-gray-800 mb-2" style={{ color: '#2a3a5a' }}>{book.volumeInfo.title}</h1>
             <p className="text-lg font-medium text-gray-600 mb-2">by {book.volumeInfo.authors?.join(', ')}</p>
             <p className="text-sm font-medium text-gray-500 mb-4">Published: {book.volumeInfo.publishedDate}</p>
           </>
@@ -125,7 +136,7 @@ export default function Home() {
   
       <div className="flex-1 flex flex-col">
         <div className="bg-white shadow-md rounded-lg p-6 mb-4 flex-1">
-          <h2 className="text-xl font-medium text-gray-800 mb-4">Discussion Questions</h2>
+          <h2 className="text-xl font-medium text-gray-800 mb-4" style={{ color: '#2a3a5a' }}>Discussion Questions</h2>
   
           {/* Existing Questions */}
           {questions.length > 0 ? (
@@ -134,9 +145,9 @@ export default function Home() {
                 <div
                   key={question._id}
                   className="border border-gray-300 p-4 rounded-lg bg-gray-50"
-                  style={{ boxShadow: '2px 2px 4px rgba(0, 0, 255, 0.2)' }}
+                  style={{ boxShadow: '2px 2px 4px rgba(59, 74, 115, 0.3)' }} // Updated shadow color
                 >
-                  <p className="text-sm font-medium text-gray-900 mb-2">{question.question}</p>
+                  <p className="text-sm font-medium text-gray-900 mb-2" style={{ color: '#2a3a5a' }}>{question.question}</p>
                 </div>
               ))}
               
@@ -149,8 +160,13 @@ export default function Home() {
         </div>
   
         {/* New Question Form */}
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-medium text-gray-800 mb-4 text-center ">Post a New Question</h2>
+        <div
+          className="bg-white rounded-lg p-6"
+          style={{
+            boxShadow: '0 4px 8px rgba(59, 74, 115, 0.3)' // Custom shadow color
+          }}
+        >
+          <h2 className="text-xl font-medium text-gray-800 mb-4 text-center" style={{ color: '#2a3a5a' }}>Post a New Question</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <textarea
               placeholder="Enter your question..."
@@ -168,9 +184,11 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 text-white rounded-lg transition text-sm font-medium ${
-                loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+              className={`w-full py-2 text-[#3b4a73] rounded-lg transition text-2xl font-medium ${
+                loading
+                  ? 'bg-gray-500 cursor-not-allowed'
+                  : 'bg-[#c6e5f3] hover:bg-[#a1c9e7]'
+              } ${pacifico.className}`}
             >
               Submit Question
             </button>

@@ -33,6 +33,14 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog"
 
+import { Pacifico } from 'next/font/google'
+
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function Home() {
   const router = useRouter(); 
 
@@ -122,13 +130,14 @@ export default function Home() {
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
       placeholder="Search for books..."
-      className="w-full px-4 py-2 min-w-[450px] rounded-l-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 box-border placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium text-sm font-medium"
+      className="w-full px-4 py-2 min-w-[430px] rounded-l-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 box-border placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium text-sm font-medium"
     />
     
     {/* Search Button */}
     <button
       onClick={fetchBooks}
-      className="flex items-center justify-center absolute right-0 top-0 h-full px-4 py-2 rounded-r-lg bg-blue-500 text-white font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 space-x-2"
+      className={`${pacifico.className} flex items-center justify-center absolute right-0 top-0 h-full px-4 py-2 rounded-r-lg text-[#3b4a73] font-medium focus:outline-none focus:ring-2 focus:ring-[#c6e5f3] transition-colors duration-300 space-x-2`}
+      style={{ backgroundColor: '#c6e5f3' }}
     >
       <span>Search</span>
       <LibraryBig className="w-5 h-5" /> {/* Adjust size if needed */}
@@ -153,13 +162,14 @@ export default function Home() {
                 />
               )}
               <div className="mb-2">
-                <h2 className="text-lg font-bold text-gray-800">{book.volumeInfo.title}</h2>  
+                <h2 className="text-lg font-bold text-gray-800" style={{ color: '#2a3a5a' }}>{book.volumeInfo.title}</h2>  
                 <p className="text-gray-600 text-sm">by {book.volumeInfo.authors?.join(', ')}</p> 
               </div>
               <p className="text-gray-500 text-sm mb-3">Published: {book.volumeInfo.publishedDate}</p> 
               <button
                 onClick={() => handleDialogOpen(book)}
-                className="text-sm font-medium bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"  // Adjusted padding
+                className={`${pacifico.className} text-lg font-medium text-[#3b4a73] px-3 py-1 rounded transition`}
+                style={{ backgroundColor: '#c6e5f3' }}
               >
                 More Info
               </button>
@@ -183,7 +193,7 @@ export default function Home() {
                   className="w-32 h-30 object-cover rounded-lg mb-4"
                 />
               )}
-              <h2 className="text-2xl font-medium text-gray-800 mb-1 text-center">{currentBook?.volumeInfo.title}</h2>
+              <h2 className="text-2xl font-medium text-gray-800 mb-1 text-center" style={{ color: '#2a3a5a' }}>{currentBook?.volumeInfo.title}</h2>
               <p className="text-lg font-medium text-gray-600 mb-2">by {currentBook?.volumeInfo.authors?.join(', ')}</p>
               <p className="text-sm font-medium text-gray-500 mb-0">Published: {currentBook?.volumeInfo.publishedDate}</p>
             </div>
@@ -193,7 +203,7 @@ export default function Home() {
                 questions.map((question) => (
                   <div key={question._id} className="flex gap-4 bg-white px-4 py-3 justify-between mb-2 shadow-sm">
                     <div className="flex flex-1 flex-col justify-center">
-                      <p className="text-[#181411] text-md font-medium leading-normal">{question.question}</p>
+                      <p className="text-[#181411] text-md font-medium leading-normal" style={{ color: '#2a3a5a' }}>{question.question}</p>
                     </div>
                     <div className="shrink-0">
                       <button onClick={() => goToAnswer(currentBook?.id, question._id)} className="text-[#181411] flex items-center justify-center">
@@ -217,10 +227,11 @@ export default function Home() {
             <div className="flex px-4 py-3">
               <button
                 onClick={() => goToQuestion(currentBook?.id)}
-                className="flex items-center justify-center min-w-[90px] max-w-[480px] cursor-pointer overflow-hidden rounded-xl h-12 px-20 bg-blue-500 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-600 transition"
+                className={`${pacifico.className} flex items-center justify-center min-w-[90px] max-w-[480px] cursor-pointer overflow-hidden rounded-xl h-12 px-20 text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#a1c9e7] transition`}
+                style={{ backgroundColor: '#c6e5f3', color: '#3b4a73' }}
               >
-                <span className="flex items-center space-x-2">
-                  <span className="text-lg font-medium truncate">Post New Question</span>
+                <span className="flex items-center">
+                  <span className="text-2xl font-medium truncate">Post New Question</span>
                   <CirclePlus className="w-5 h-5" /> {/* Adjust size if needed */}
                 </span>
               </button>
@@ -233,14 +244,3 @@ export default function Home() {
     </div>
   );
 }
-
-const DualRingLoader = () => {
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="relative">
-        <div className="w-16 h-16 border-4 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-        <div className="absolute top-0 left-0 w-16 h-16 border-4 border-t-4 border-blue-300 border-solid rounded-full animate-spin" style={{animationDuration: '1.5s'}}></div>
-      </div>
-    </div>
-  );
-};

@@ -1,6 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Pacifico } from 'next/font/google'
+
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const HomePage = () => {
   const router = useRouter();
@@ -24,7 +31,8 @@ const HomePage = () => {
         {/* Call-to-Action Button */}
         <button
           onClick={navigateToBooks}
-          className="bg-blue-500 text-white text-lg font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300"
+          className={`${pacifico.className} text-2lg font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`}
+          style={{ backgroundColor: '#c6e5f3', color: '#3b4a73' }}
         >
           Browse Books
         </button>

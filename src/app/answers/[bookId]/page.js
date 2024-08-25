@@ -17,6 +17,14 @@ import Spinner from '../../../components/loadingUi.jsx'
 
 import { CircleUserRound } from 'lucide-react';
 
+import { Pacifico } from 'next/font/google'
+
+const pacifico = Pacifico({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 export default function Home() {
   const router = useRouter(); 
   // const { isLoaded, userId } = useAuth();
@@ -167,7 +175,10 @@ export default function Home() {
       {loading ? (< Spinner />) : (
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* Book Info Section */}
-        <div className="w-full lg:w-2/5 bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col h-full">
+        <div className="w-full lg:w-2/5 bg-white p-6 rounded-lg border border-gray-200 flex flex-col h-full"
+          style={{
+            boxShadow: '0 10px 17px rgba(59, 74, 115, 0.3)' // Adjust shadow color
+          }}>
           <div className="flex items-center gap-2 mb-4">
             {book && book.volumeInfo.imageLinks?.thumbnail && (
               <img
@@ -177,14 +188,14 @@ export default function Home() {
               />
             )}
             <div>
-              <h2 className="text-lg font-medium text-gray-800">{book?.volumeInfo.title}</h2>
+              <h2 className="text-lg font-medium text-gray-800 " style={{ color: '#2a3a5a' }}>{book?.volumeInfo.title}</h2>
               <h2 className="text-sm font-medium text-gray-500">By: {book?.volumeInfo.authors?.join(', ')}</h2>
             </div>
           </div>
   
           {/* Other Questions Section */}
           <div className="flex-col space-y-4 flex-1 overflow-auto">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Other Questions</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2" style={{ color: '#2a3a5a' }}>Other Questions</h3>
             {questions.length > 0 ? (
               <div className="space-y-2 overflow-y-auto max-h-full">
                 {questions.map((question) => (
@@ -194,7 +205,7 @@ export default function Home() {
                     className="flex items-center gap-4 bg-gray-50 px-4 py-3 rounded-lg shadow-sm w-full max-w-md h-16"
                   >
                     <div className="flex flex-col justify-center w-full">
-                      <p className="text-gray-800 text-base font-medium">
+                      <p className="text-gray-800 text-base font-medium" style={{ color: '#2a3a5a' }}>
                         {question.question}
                       </p>
                     </div>
@@ -209,10 +220,18 @@ export default function Home() {
   
         {/* Chat Box */}
         
-        <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-lg border border-gray-200 flex flex-col h-full">
+        <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg border border-gray-200 flex flex-col h-full"
+          style={{
+            boxShadow: '0 10px 17px rgba(59, 74, 115, 0.3)' // Adjust shadow color
+          }}>
           {/* Main Question Placeholder */}
           {currentQuestion && (
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">{currentQuestion.question}</h2>
+            <h2
+              className="text-xl font-semibold mb-4"
+              style={{ color: '#2a3a5a' }}
+            >
+              {currentQuestion.question}
+            </h2>
           )}
   
           <hr className="my-4 border-t border-gray-300" />
@@ -267,9 +286,12 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading}
-              className={`flex items-center justify-center p-1.5 rounded-lg h-8 px-4 bg-blue-500 text-white text-sm font-medium ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'hover:bg-blue-600'
-              }`}
+              className={`flex items-center justify-center p-6 rounded-lg h-8 px-8 text-md font-medium ${
+                loading
+                  ? 'bg-[#a1c9e7] cursor-not-allowed'  // lighter shade for disabled state
+                  : 'bg-[#c6e5f3] hover:bg-[#a1c9e7]'
+              } ${pacifico.className}`} // Apply custom font if needed
+              style={{ color: '#3b4a73' }} // Text color
             >
               Send
             </button>
