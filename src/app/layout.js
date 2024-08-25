@@ -15,9 +15,9 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <div className="mx-36 text-2xl">
+          <div className="text-2xl">
             <Navbar />
-            <div className="flex flex-col items-center text-center mt-6">
+            <div className=" mx-36 flex flex-col items-center text-center mt-2">
               {children} 
             </div>
           </div>

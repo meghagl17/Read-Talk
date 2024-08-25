@@ -16,9 +16,9 @@ import {
 
 import Spinner from '../../../components/loadingUi.jsx'
 
-import { Pacifico } from 'next/font/google'
+import { Anton } from 'next/font/google'
 
-const pacifico = Pacifico({
+const pacifico = Anton({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',

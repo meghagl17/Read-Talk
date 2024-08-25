@@ -62,3 +62,33 @@ export async function POST(req) {
     return NextResponse.json({ error: error.message, details: error.stack }, { status: 500 });
   }
 }
+
+export async function GET(req) {
+  const GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes';
+  const API_KEY = process.env.GOOGLE_BOOKS_API_KEY; // Assuming you're using environment variables
+
+  console.log('Handling GET request to /api/books');
+
+  try {
+    // Build the URL to fetch random books with a fixed query (since Google Books API requires the `q` parameter)
+    const url = `${GOOGLE_BOOKS_API_URL}?q=random&maxResults=20&startIndex=${Math.floor(Math.random() * 1000)}&key=${API_KEY}`;
+
+    // Fetch books from Google Books API
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(`Error fetching data from Google Books API: ${data.error?.message || 'Unknown error'}`);
+    }
+
+    console.log('Fetched books:', data.items);
+
+    // Return a response with the fetched books
+    return NextResponse.json(data.items, { status: 200, headers: { 'Content-Type': 'application/json' } });
+  } catch (error) {
+    console.error('Error in GET request:', error.message);
+
+    // Return an error response with proper details
+    return NextResponse.json({ error: error.message, details: error.stack }, { status: 500 });
+  }
+}

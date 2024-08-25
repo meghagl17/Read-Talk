@@ -17,9 +17,9 @@ import Spinner from '../../../components/loadingUi.jsx'
 
 import { CircleUserRound } from 'lucide-react';
 
-import { Pacifico } from 'next/font/google'
+import { Anton } from 'next/font/google'
 
-const pacifico = Pacifico({
+const pacifico = Anton({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
@@ -171,7 +171,7 @@ export default function Home() {
   }, [answers]);
 
   return (
-    <div className="w-full mx-auto p-4 h-[calc(100vh-90px)] flex flex-col">
+    <div className="w-full mx-auto p-4 h-[calc(100vh-70px)] flex flex-col">
       {loading ? (< Spinner />) : (
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* Book Info Section */}

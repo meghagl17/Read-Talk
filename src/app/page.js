@@ -1,51 +1,61 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Pacifico } from 'next/font/google'
+import { Pacifico, Anton } from 'next/font/google';
+import Image from 'next/image';
+import BookTalk from '../../public/logo.png';
 
 const pacifico = Pacifico({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
-})
+});
+
+const anton = Anton({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 const HomePage = () => {
   const router = useRouter();
 
-  const navigateToBooks = () => {
+  const navigateToHome = () => {
     router.push('/books');
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200 p-6">
-      {/* Main Container */}
-      <div className="max-w-4xl text-center bg-white p-8 rounded-lg shadow-lg">
-        {/* Heading */}
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-4">Welcome to BookTalk!</h1>
+    <div className="flex flex-col items-center justify-center">
 
-        {/* Subheading */}
-        <p className="text-lg text-gray-600 mb-6">
-          Discover and discuss your favorite books with our vibrant community. Explore new titles, share insights, and find your next great read.
-        </p>
+      {/* Tagline and Call-to-Action Button */}
+      <div className="flex flex-row items-center justify-center p-6">
+        <div className="text-left max-w-xl">
+          <h1 className={`${anton.className} text-5xl font-extrabold text-gray-800 mb-4`}>
+            Welcome to BookTalk!
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">
+            Discover and discuss your favorite books with our vibrant community.
+          </p>
+          <button
+            onClick={navigateToHome}
+            className={`${pacifico.className} text-xl font-semibold px-6 py-3 rounded-lg border-2 border-gray-800 text-gray-800 hover:bg-gray-100 transition-colors duration-300`}
+            style={{ borderColor: '#3b4a73', color: '#3b4a73' }}
+          >
+            Home
+          </button>
+        </div>
 
-        {/* Call-to-Action Button */}
-        <button
-          onClick={navigateToBooks}
-          className={`${pacifico.className} text-2lg font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`}
-          style={{ backgroundColor: '#c6e5f3', color: '#3b4a73' }}
-        >
-          Browse Books
-        </button>
+        {/* Logo */}
+        <div className="relative w-full flex justify-center mb-8 overflow-hidden">
+          <Image
+            src={BookTalk}
+            alt="BookTalk Logo"
+            className="object-cover object-center w-full h-[400px] max-w-3xl"
+            priority
+          />
+        </div>
       </div>
 
-      {/* Additional Info or Image */}
-      <div className="mt-12">
-        <img
-          src="/path-to-your-image.jpg" // Replace with an actual image path
-          alt="Books"
-          className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
-        />
-      </div>
     </div>
   );
 };

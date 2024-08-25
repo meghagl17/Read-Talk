@@ -6,7 +6,7 @@ import { UserButton, auth, useAuth } from "@clerk/nextjs"
 import { useRouter, useSearchParams } from 'next/navigation';  // Use next/navigation for app directory routing
 
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Card,
@@ -33,9 +33,9 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog"
 
-import { Pacifico } from 'next/font/google'
+import { Anton } from 'next/font/google'
 
-const pacifico = Pacifico({
+const pacifico = Anton({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
@@ -51,6 +51,26 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [loadingDialog, setLoadingDialog] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchInitialBooks = async () => {
+      try {
+        const response = await fetch('/api/books');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setBooks(data);
+      } catch (err) {
+        console.error("Error fetching Books:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialBooks();
+  }, []);
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -120,7 +140,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r">
+    <div className="min-h-screen bg-gradient-to-r mt-4">
       {/* Search Bar */}
       <div className="flex justify-center items-center mb-8">
   <div className="relative w-full max-w-md">
