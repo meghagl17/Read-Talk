@@ -17,7 +17,8 @@ export default function RootLayout({ children }) {
         <body className={inter.className}>
           <div className="text-2xl">
             <Navbar />
-            <div className=" mx-36 flex flex-col items-center text-center mt-2">
+            {/* <div className=" mx-36 flex flex-col items-center text-center mt-2"> */}
+            <div className="flex flex-col items-center text-center">
               {children} 
             </div>
           </div>

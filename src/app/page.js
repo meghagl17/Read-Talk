@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { Pacifico, Anton } from 'next/font/google';
 import Image from 'next/image';
-import BookTalk from '../../public/logo.png';
+import BookTalk from '../../public/BookTalk (2).png';
+import book from '../../public/Discuss your favorite books.png';
 
 const pacifico = Pacifico({
   weight: '400',
@@ -25,10 +26,10 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex w-full h-full flex-col">
 
-      {/* Tagline and Call-to-Action Button */}
-      <div className="flex flex-row items-center justify-center p-6">
+      {/* Container for Tagline and Logo Side by Side */}
+      <div className="flex flex-row items-center justify-center p-6" style={{ backgroundColor: '#c6e5f3' }}>
         <div className="text-left max-w-xl">
           <h1 className={`${anton.className} text-5xl font-extrabold text-gray-800 mb-4`}>
             Welcome to BookTalk!
@@ -45,15 +46,48 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Logo */}
-        <div className="relative w-full flex justify-center mb-8 overflow-hidden">
+        {/* BookTalk Logo beside the Tagline */}
+        <div className="relative w-1/2 flex justify-center mb-8 overflow-hidden max-w-lg">
           <Image
             src={BookTalk}
             alt="BookTalk Logo"
-            className="object-cover object-center w-full h-[400px] max-w-3xl"
+            className="object-cover object-center w-full h-auto"
             priority
           />
         </div>
+      </div>
+
+      {/* Book Image Below */}
+      <div className="relative w-full flex justify-center mb-8 items-center">
+        {/* First Image */}
+        <Image
+          src={book}
+          alt="Discuss your favorite books"
+          className="object-cover object-center w-1/4 h-auto"
+          priority
+        />
+
+        {/* Vertical Line */}
+        <div className="h-32 w-px bg-gray-400 mx-4"></div>
+
+          {/* Second Image */}
+          <Image
+            src={book}
+            alt="Discuss your favorite books"
+            className="object-cover object-center w-1/4 h-auto"
+            priority
+          />
+
+          {/* Vertical Line */}
+          <div className="h-32 w-px bg-gray-400 mx-4"></div>
+
+          {/* Third Image */}
+          <Image
+            src={book}
+            alt="Discuss your favorite books"
+            className="object-cover object-center w-1/4 h-auto"
+            priority
+          />
       </div>
 
     </div>

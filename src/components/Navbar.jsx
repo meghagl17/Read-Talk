@@ -6,6 +6,8 @@ import { UserButton, useAuth } from '@clerk/nextjs';
 import { Pacifico, Anton } from 'next/font/google'
 import Image from 'next/image';
 import BookTalk from '../../public/logo.png';
+import { User } from 'lucide-react';
+
 
 const pacifico = Pacifico({
   weight: '400',
@@ -39,11 +41,15 @@ export function Navbar() {
         {/* Links */}
         <div className="flex items-center space-x-8">
           {!userId ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5">
+
               <Link href="/sign-in" passHref>
-                <div className={`${anton.className} text-2lg font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`}
-                  style={{ backgroundColor: '#ffffff', color: '#3b4a73' }}>
+                <div className="flex items-center space-x-2">
+                <User />
+                <div className={`${anton.className} text-2lg font-medium py-2`}
+                  style={{ color: '#3b4a73' }}>
                   Login
+                </div>
                 </div>
               </Link>
 
