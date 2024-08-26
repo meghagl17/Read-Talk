@@ -102,7 +102,7 @@ const HomePage = () => {
         {/* Main Heading */}
         <div className="text-center">
           <h2 className="text-6xl font-extrabold text-gray-800 mb-2">Coming Soon</h2>
-          <p className="text-xl text-gray-600">I'm excited to share some new upcoming features with you!</p>
+          <p className="text-xl text-gray-600">Im excited to share some new upcoming features with you!</p>
         </div>
 
         {/* Tabs */}
