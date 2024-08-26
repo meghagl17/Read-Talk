@@ -35,7 +35,7 @@ export function Navbar() {
             </h3>
             {/* Show logo on larger screens */}
             <div className="hidden lg:flex items-center">
-              <Image src={BookTalk} alt="BookTalk Logo" width={40} height={40} />
+              <Image src={BookTalk} alt="BookTalk Logo" width={50} height={50} />
               <h3 className={`${pacifico.className} text-2xl`} style={{ color: '#3b4a73' }}>
                 BookTalk
               </h3>

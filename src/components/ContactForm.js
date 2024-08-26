@@ -1,5 +1,3 @@
-// components/ContactForm.js
-
 import { useState } from 'react';
 
 const ContactForm = () => {
@@ -41,53 +39,65 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Contact Me</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            rows="4"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            required
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700"
-        >
-          Send
-        </button>
-        {status && <p className="mt-2 text-lg">{status}</p>}
-      </form>
+    <div className="max-w-5xl mx-auto flex flex-col lg:flex-row pt-8 pb-8 items-center justify-between space-y-8 lg:space-y-0 lg:space-x-8 px-4 md:px-8 lg:px-0">
+      
+      {/* Left Side: "Contact Me" */}
+      <div className="w-full lg:w-1/3 text-center lg:text-left">
+        <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-800 mb-2" style={{ color: '#2e3b5f' }}>Contact Me</h2>
+        <p className="text-lg text-gray-600">I would love to hear from you! Whether you have a question, feedback, or just want to say hi, feel free to drop me a message. I’ll get back to you as soon as possible.</p>
+      </div>
+
+      {/* Right Side: Form */}
+      <div className="w-full lg:w-2/3">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Name"
+              className="w-full sm:w-96 bg-transparent border-b-2 border-[#2e3b5f] focus:border-[#2e3b5f] outline-none py-2 text-base sm:text-lg text-gray-800 placeholder-gray-500"
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full sm:w-96 bg-transparent border-b-2 border-[#2e3b5f] focus:border-[#2e3b5f] outline-none py-2 text-base sm:text-lg text-gray-800 placeholder-gray-500"
+              required
+            />
+          </div>
+
+          <div className="relative">
+            <textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows="4"
+              placeholder="Your message"
+              className="w-full sm:w-96 bg-transparent border-b-2 border-[#2e3b5f] focus:border-[#2e3b5f] outline-none py-2 text-base sm:text-lg text-gray-800 placeholder-gray-500"
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            className="px-6 py-3 bg-[#3b4a73] text-white rounded-md shadow-md hover:bg-opacity-90 text-base sm:text-lg font-semibold" style={{ backgroundColor: '#2e3b5f' }}
+          >
+            Send
+          </button>
+          {status && <p className="mt-4 text-base sm:text-lg text-[#3b4a73]">{status}</p>}
+        </form>
+      </div>
     </div>
   );
 };
