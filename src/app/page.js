@@ -5,6 +5,7 @@ import { Pacifico, Anton } from 'next/font/google';
 import Image from 'next/image';
 import BookTalk from '../../public/BookTalk (2).png';
 import book from '../../public/Discuss your favorite books.png';
+import { Bookmark } from 'lucide-react';
 
 const pacifico = Pacifico({
   weight: '400',
@@ -24,6 +25,12 @@ const HomePage = () => {
   const navigateToHome = () => {
     router.push('/books');
   };
+
+  const features = [
+    "Advanced Stats and Insights",
+    "Top-rated books on the app",
+    "Personalized recommendations",
+  ];
 
   return (
     <div className="flex w-full h-full flex-col">
@@ -58,7 +65,7 @@ const HomePage = () => {
       </div>
 
       {/* Book Image Below */}
-      <div className="relative w-full flex justify-center mb-8 items-center">
+      <div className="relative w-full flex justify-center mb-8 items-center" style={{ backgroundColor: '#f0faff' }}>
         {/* First Image */}
         <Image
           src={book}
@@ -90,6 +97,27 @@ const HomePage = () => {
           />
       </div>
 
+      {/* Coming Soon Section */}
+      <div className="flex flex-col items-center justify-center">
+        {/* Main Heading */}
+        <div className="text-center">
+          <h2 className="text-6xl font-extrabold text-gray-800 mb-2">Coming Soon</h2>
+          <p className="text-xl text-gray-600">I'm excited to share some new upcoming features with you!</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="w-full max-w-4xl mt-6">
+          <div className="flex flex-wrap justify-center gap-4">
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center">
+                <Bookmark className="mr-2 text-gray-600" />
+                <p className="text-lg text-gray-700">{feature}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };

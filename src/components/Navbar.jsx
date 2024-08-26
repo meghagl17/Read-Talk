@@ -3,76 +3,73 @@
 import React from 'react';
 import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
-import { Pacifico, Anton } from 'next/font/google'
+import { Pacifico, Anton } from 'next/font/google';
 import Image from 'next/image';
 import BookTalk from '../../public/logo.png';
 import { User } from 'lucide-react';
-
 
 const pacifico = Pacifico({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
-})
+});
 
 const anton = Anton({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
-})
+});
 
 export function Navbar() {
   const { isLoaded, userId } = useAuth();
 
   return (
-    <div className="w-full pr-4 shadow-lg" style={{ backgroundColor: '#c6e5f3' }}>
-      <div className="flex flex-row justify-between items-center max-w-7xl mx-auto">
+    <div className="w-full shadow-lg" style={{ backgroundColor: '#c6e5f3' }}>
+      <div className="flex justify-between items-center w-full max-w-7xl mx-auto px-4 py-2">
         {/* Brand Name */}
-        <Link href="/"><h3 className={`${pacifico.className} flex items-center justify-center croll-m-20 text-3xl font-extrabold text-white tracking-tight`} style={{color: '#3b4a73', height: '100px'}}>
-          <Image
-            src={BookTalk}
-            alt="BookTalk Logo"
-            className="object-cover object-center w-full h-full"
-            priority
-          />
-          BookTalk
-        </h3></Link>
+        <Link href="/">
+          <div className="flex items-center">
+            {/* Show text instead of logo on small screens */}
+            <h3 className={`${pacifico.className} text-2xl lg:hidden`} style={{ color: '#3b4a73' }}>
+              BookTalk
+            </h3>
+            {/* Show logo on larger screens */}
+            <div className="hidden lg:flex items-center">
+              <Image src={BookTalk} alt="BookTalk Logo" width={40} height={40} />
+              <h3 className={`${pacifico.className} text-2xl`} style={{ color: '#3b4a73' }}>
+                BookTalk
+              </h3>
+            </div>
+          </div>
+        </Link>
 
         {/* Links */}
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-6">
           {!userId ? (
-            <div className="flex items-center space-x-5">
-
+            <div className="flex items-center space-x-4">
               <Link href="/sign-in" passHref>
-                <div className="flex items-center space-x-2">
-                <User />
-                <div className={`${anton.className} text-2lg font-medium py-2`}
-                  style={{ color: '#3b4a73' }}>
-                  Login
-                </div>
+                <div className="flex items-center space-x-1">
+                  <User />
+                  <div className={`${anton.className} text-lg`} style={{ color: '#3b4a73' }}>
+                    Login
+                  </div>
                 </div>
               </Link>
 
               <Link href="/sign-up" passHref>
-                <div className={`${anton.className} text-2lg font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`}
-                  style={{ backgroundColor: '#ffffff', color: '#3b4a73' }}>
+                <div className={`${anton.className} text-lg font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`} style={{ backgroundColor: '#ffffff', color: '#3b4a73' }}>
                   Sign up
                 </div>
               </Link>
             </div>
           ) : (
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
               <Link href="/books" passHref>
-                <div className={`${anton.className} cursor-pointer hover:text-gray-200 transition-colors duration-300`} style={{color: '#3b4a73'}}>
+                <div className={`${anton.className} cursor-pointer hover:text-gray-200 transition-colors duration-300`} style={{ color: '#3b4a73' }}>
                   Home
                 </div>
               </Link>
-              {/* <Link href="/profile" passHref>
-                <div className="text-white text-lg cursor-pointer hover:text-gray-200 transition-colors duration-300">
-                  Profile
-                </div>
-              </Link> */}
-              <div className="bg-white p-1 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300 min-height-40px">
+              <div className="bg-white p-1 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300">
                 <UserButton afterSignOutUrl="/" />
               </div>
             </div>

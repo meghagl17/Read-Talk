@@ -91,7 +91,7 @@ export default function Home() {
     const data = await res.json();
   
     if (!res.ok) {
-      setAnswers([]);
+      setAnswers([{answer: "be the first to send a responce!", _id: 1, name: "Bot"}]);
       setLoading(false);
       throw new Error(data.message || 'Something went wrong');
     }
@@ -237,7 +237,7 @@ export default function Home() {
           <hr className="my-4 border-t border-gray-300" />
   
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-2 space-y-3">
+          <div className="flex-1 min-h-[300px] overflow-y-auto p-2 space-y-3">
             {answers.length > 0 ? (
               answers.map((answer) => (
                 <div key={answer._id} className="flex items-center space-x-3">
@@ -301,6 +301,4 @@ export default function Home() {
       )}
     </div>
   );
-  
-  
 }
