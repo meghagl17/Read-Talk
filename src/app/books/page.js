@@ -52,23 +52,23 @@ export default function Home() {
   const [questions, setQuestions] = useState([]);
   const [loadingDialog, setLoadingDialog] = useState(false);
 
+  const fetchInitialBooks = async () => {
+    try {
+      const response = await fetch('/api/books');
+      // if (!response.ok) {
+      //   throw new Error('Network response was not ok');
+      // }
+      const data = await response.json();
+      setBooks(data);
+    } catch (err) {
+      console.error("Error fetching Books:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
-    const fetchInitialBooks = async () => {
-      try {
-        const response = await fetch('/api/books');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setBooks(data);
-      } catch (err) {
-        console.error("Error fetching Books:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchInitialBooks();
   }, []);
 
