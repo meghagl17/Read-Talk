@@ -66,7 +66,7 @@ const HomePage = () => {
           className={`${pacifico.className} text-base lg:text-xl font-semibold px-4 lg:px-6 py-2 lg:py-3 rounded-lg border-2 border-gray-800 text-gray-800 hover:bg-gray-100 transition-colors duration-300`}
           style={{ borderColor: '#3b4a73', color: '#3b4a73' }}
         >
-          Home
+          Browse Books
         </button>
       </div>
 

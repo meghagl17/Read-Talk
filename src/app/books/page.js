@@ -70,7 +70,7 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     fetchInitialBooks();
-  }, []);
+  }, [userId, isLoaded]);
 
   const fetchBooks = async () => {
     setLoading(true);
@@ -147,6 +147,12 @@ export default function Home() {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for books..."
             className="w-full px-4 py-2 rounded-l-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium text-sm font-medium"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                // e.preventDefault();
+                fetchBooks();
+              }
+            }}
           />
   
           {/* Search Button */}
@@ -156,7 +162,7 @@ export default function Home() {
             style={{ backgroundColor: '#c6e5f3' }}
           >
             <span>Search</span>
-            <LibraryBig className="w-5 h-5" /> {/* Adjust size if needed */}
+            <LibraryBig className="w-5 h-5" /> 
           </button>
         </div>
       </div>
