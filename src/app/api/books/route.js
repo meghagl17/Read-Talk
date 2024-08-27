@@ -68,7 +68,7 @@ export async function GET(req) {
     }
 
     // Return a response with the fetched books
-    return NextResponse.json(data.items, { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify(data.items), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Error in GET request:', error.message);
 
