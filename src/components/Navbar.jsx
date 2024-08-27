@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { UserButton, useAuth } from '@clerk/nextjs';
 import { Pacifico, Anton } from 'next/font/google';
 import Image from 'next/image';
-import BookTalk from '../../public/logo.png';
+import BookTalk from '../../public/BookTalkLogo.png';
 import { User } from 'lucide-react';
 
 const pacifico = Pacifico({
@@ -36,7 +36,7 @@ export function Navbar() {
             {/* Show logo on larger screens */}
             <div className="hidden lg:flex items-center">
               <Image src={BookTalk} alt="BookTalk Logo" width={50} height={50} />
-              <h3 className={`${pacifico.className} text-2xl`} style={{ color: '#3b4a73' }}>
+              <h3 className={`${pacifico.className} text-2xl ml-3`} style={{ color: '#3b4a73' }}>
                 BookTalk
               </h3>
             </div>
@@ -57,7 +57,7 @@ export function Navbar() {
               </Link>
 
               <Link href="/sign-up" passHref>
-                <div className={`${anton.className} text-lg font-medium px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600 transition-colors duration-300`} style={{ backgroundColor: '#ffffff', color: '#3b4a73' }}>
+                <div className={`${anton.className} text-lg font-medium px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300`} style={{ backgroundColor: '#ffffff', color: '#3b4a73' }}>
                   Sign up
                 </div>
               </Link>

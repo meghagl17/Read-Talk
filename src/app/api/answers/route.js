@@ -3,12 +3,8 @@ import { createAnswer, getAnswersByQuestionId } from '../../../lib/actions/answe
 
 export async function POST(request) {
   try {
-    console.log(request);
     const { questionId, clerkUserID, answer, name } = await request.json();
-    console.log(name);
-    // Create a new answer using the action
     const newAnswer = await createAnswer({ questionId, clerkUserID, answer, name });
-    console.log(newAnswer);
     return NextResponse.json({ message: 'Answer created successfully!', data: newAnswer }, { status: 201 });
   } catch (error) {
     console.error('Failed to create answer:', error);
@@ -18,10 +14,8 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    console.log(request);
     const { searchParams } = new URL(request.url);
     const QuestionId = searchParams.get('QuestionId');
-    console.log(QuestionId);
     if (!QuestionId) {
       return NextResponse.json({ message: 'QuestionId is required' }, { status: 400 });
     }

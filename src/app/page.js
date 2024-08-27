@@ -10,7 +10,7 @@ import feature3 from '../../public/feature3.png';
 import feature4 from '../../public/feature4.png';
 import bookmark from '../../public/bookmark.png';
 
-import { Bookmark } from 'lucide-react';
+// import { Bookmark } from 'lucide-react';
 import ContactForm from '../components/ContactForm.js'
 
 const pacifico = Pacifico({
@@ -32,10 +32,10 @@ const HomePage = () => {
     router.push('/books');
   };
 
-  const features = [
-    "Advanced Stats and Insights",
-    "Top-rated books on the app",
-    "Personalized recommendations",
+  const newFeatures = [
+    {feature: "Advanced Stats and Insights"},
+    {feature: "Top-rated books on the app"},
+    {feature: "Personalized recommendations"},
   ];
 
   return (
@@ -123,15 +123,33 @@ const HomePage = () => {
     </div>
 
       {/* Coming Soon Section */}
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center pt-8 pb-8 md:pt-10 md:pb-10">
         {/* Main Heading */}
-        <div className="text-center" style={{ backgroundColor: '#99c8dd' }}>
-          <h2 className="text-6xl font-extrabold text-gray-800 mb-2" style={{ color: '#2e3b5f' }}>Coming Soon...</h2>
-          <p className="text-xl text-gray-600">Im excited to share some new upcoming features with you!</p>
-          
+        <div className="text-center px-4 md:px-20 py-8" style={{ backgroundColor: '#99c8dd' }}>
+          <h2 className={`${anton.className} text-4xl md:text-6xl font-extrabold text-gray-800 mb-2`} style={{ color: '#2e3b5f' }}>
+            Coming Soon...
+          </h2>
+          <p className="text-lg md:text-xl" style={{ color: '#2e3b5f' }}>
+            I'm excited to share some new upcoming features with you!
+          </p>
+          <div className="flex flex-col mt-8">
+            {newFeatures.map((feature, index) => (
+              <div key={index} className="flex flex-row justify-left items-center mb-6">
+                <Image
+                  src={bookmark}
+                  alt="Feature icon"
+                  className="object-cover object-center w-1/6 md:w-1/12 h-auto mb-2 mr-2"
+                  priority
+                />
+                <div className="text-base md:text-lg" style={{ color: '#2e3b5f' }}>
+                  {feature.feature}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-
       </div>
+
     </div>
       <div className="w-full" style={{ backgroundColor: '#c6e5f3' }}>
         <ContactForm />

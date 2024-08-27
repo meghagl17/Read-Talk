@@ -1,17 +1,14 @@
 "use server";
 
-import Answer from "../modals/answer.modal"; // Adjust the path based on your file structure
+import Answer from "../modals/answer.modal";
 import { connect } from "../db";
 
 export async function createAnswer({ questionId, clerkUserID, answer, name }) {
   try {
-    await connect(); // Ensure the database connection is established
-    console.log(name);
+    await connect();
     const newAnswer = await Answer.create({ questionId, clerkUserID, answer, name });
-    console.log(newAnswer);
     return JSON.parse(JSON.stringify(newAnswer));
   } catch (error) {
-    console.log(error);
     throw new Error('Failed to create answer');
   }
 }
@@ -19,11 +16,10 @@ export async function createAnswer({ questionId, clerkUserID, answer, name }) {
 // Fetch questions by BookId
 export async function getAnswersByQuestionId(questionId) {
   try {
-    await connect(); // Ensure the database connection is established
-    const answers = await Answer.find({ questionId }); // Find questions with matching BookId
+    await connect();
+    const answers = await Answer.find({ questionId });
     return JSON.parse(JSON.stringify(answers));
   } catch (error) {
-    console.log(error);
     throw new Error('Failed to fetch answers');
   }
 }

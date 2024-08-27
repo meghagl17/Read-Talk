@@ -47,9 +47,7 @@ export default function Home() {
   const fetchBook = async (bookId) => {
     try {
       const url = `/api/books`;
-      console.log(url);
       const response = await axios.post(url, { volumeId: bookId });
-      console.log(response.data);
       setBook(response.data);
     } catch (error) {
       console.error("Error fetching Book:", error);
@@ -57,7 +55,6 @@ export default function Home() {
   };
 
   const fetchQuestions = async (BookId) => {
-    console.log(BookId);
     const res = await fetch(`/api/questions?BookId=${BookId}`);
     const data = await res.json();
   
@@ -65,13 +62,10 @@ export default function Home() {
       throw new Error(data.message || 'Something went wrong');
     }
 
-    console.log(data.data);
     setQuestions(data.data);
-    // return data;
   };
 
   const fetchQuestion = async (QuestionId) => {
-    console.log(QuestionId);
     const res = await fetch(`/api/questions?QuestionId=${QuestionId}`);
     const data = await res.json();
   
@@ -79,27 +73,20 @@ export default function Home() {
       throw new Error(data.message || 'Something went wrong');
     }
 
-    console.log(data);
-    console.log(data.data);
     setCurrentQuestion(data.data);
-    // return data;
   };
 
   const fetchAnswers = async (questionId) => {
-    console.log(questionId);
     const res = await fetch(`/api/answers?QuestionId=${questionId}`);
     const data = await res.json();
   
     if (!res.ok) {
-      setAnswers([{answer: "be the first to send a responce!", _id: 1, name: "Bot"}]);
+      setAnswers([{answer: "be the first to send a response!", _id: 1, name: "Bot"}]);
       setLoading(false);
       throw new Error(data.message || 'Something went wrong');
     }
-
-    console.log(data.data);
     setAnswers(data.data);
     setLoading(false);
-    // return data;
   };
 
   useEffect(() => {
@@ -127,8 +114,6 @@ export default function Home() {
         name: user.firstName,
       });
       
-      console.log(response.data);
-      console.log(answers);
       setAnswers(prevAnswers => [...prevAnswers, response.data.data]);
       setNewAnswer('');
       // Handle success, e.g., show a success message or redirect
@@ -139,10 +124,7 @@ export default function Home() {
   }
 
   const goToQuestion = async (newQuestionId) => {
-    console.log("in this function");
-    console.log(questionId);
     setQuestionId(newQuestionId);
-    console.log(questionId);
   }
 
   const searchParams = useSearchParams()
@@ -155,7 +137,6 @@ export default function Home() {
   }, [searchParams]);
 
   useEffect(() => {
-    console.log("calling this useEffect");
     if (questionId) {
       fetchAnswers(questionId);
     }
@@ -171,7 +152,7 @@ export default function Home() {
   }, [answers]);
 
   return (
-    <div className="w-full mx-auto p-4 h-[calc(100vh-70px)] flex flex-col">
+    <div className="w-full p-4 h-[calc(100vh-70px)] lg:mx-36 mt-4 flex flex-col">
       {loading ? (< Spinner />) : (
       <div className="flex flex-col lg:flex-row gap-6 h-full">
         {/* Book Info Section */}

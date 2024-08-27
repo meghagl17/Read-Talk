@@ -76,9 +76,7 @@ export default function Home() {
     setLoading(true);
     try {
       const url = `/api/books`;
-      console.log(url);
       const response = await axios.post(url, { query: searchQuery });
-      console.log(response.data);
       setBooks(response.data);
       setLoading(false);
     } catch (error) {
@@ -88,7 +86,6 @@ export default function Home() {
   };
 
   const fetchQuestions = async (BookId) => {
-    console.log(BookId);
     const res = await fetch(`/api/questions?BookId=${BookId}`);
     const data = await res.json();
   
@@ -97,7 +94,6 @@ export default function Home() {
       throw new Error(data.message || 'Something went wrong');
     }
 
-    console.log(data.data);
     setQuestions(data.data);
     setLoadingDialog(false);
     // return data;

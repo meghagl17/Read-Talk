@@ -21,9 +21,6 @@ export async function GET(request) {
     const BookId = searchParams.get('BookId');
     const QuestionId = searchParams.get('QuestionId');
 
-    console.log("QUESTION ID BEING POSTED NOW");
-    console.log(QuestionId);
-
     if (BookId) {
       const questions = await getQuestionsByBookId(BookId);
       if (!questions.length) {
@@ -32,8 +29,6 @@ export async function GET(request) {
       return NextResponse.json({ message: 'Questions fetched successfully!', data: questions }, { status: 200 });
 
     } else if (QuestionId) {
-      console.log("QUESTION ID FOUND");
-      console.log(QuestionId);
       const question = await getQuestionsByQuestionId(QuestionId);
       if (!question) {
         return NextResponse.json({ message: 'No question found for the given QuestionId' }, { status: 404 });

@@ -39,9 +39,7 @@ export default function Home() {
   const fetchBook = async (bookId) => {
     try {
       const url = `/api/books`;
-      console.log(url);
       const response = await axios.post(url, { volumeId: bookId });
-      console.log(response.data);
       setBook(response.data);
     } catch (error) {
       console.error("Error fetching Book:", error);
@@ -49,7 +47,6 @@ export default function Home() {
   };
 
   const fetchQuestions = async (BookId) => {
-    console.log(BookId);
     const res = await fetch(`/api/questions?BookId=${BookId}`);
     const data = await res.json();
   
@@ -58,7 +55,6 @@ export default function Home() {
       throw new Error(data.message || 'Something went wrong');
     }
 
-    console.log(data.data);
     setQuestions(data.data);
     setLoading(false);
     // return data;
@@ -92,9 +88,6 @@ export default function Home() {
         clerkUserID: userId, // Replace with actual Clerk user ID
       });
 
-      console.log(response.data);
-      console.log(response.data.data._id);
-      console.log(`/answers/${book.id}/?` + createQueryString('questionId', response.data.data._id));
       router.push(`/answers/${book.id}/?` + createQueryString('questionId', response.data.data._id))
       // Handle success, e.g., show a success message or redirect
     } catch (error) {
@@ -113,7 +106,7 @@ export default function Home() {
         <Spinner />
       ) : (
         <div
-          className="flex flex-col lg:flex-row gap-8 p-4 sm:p-6 min-h-[80vh]"
+          className="flex flex-col lg:flex-row gap-8 p-4 lg:mx-36 mt-4 sm:p-6 min-h-[80vh]"
           style={{
             boxShadow: '0 16px 25px rgba(59, 74, 115, 0.3)',
           }}
