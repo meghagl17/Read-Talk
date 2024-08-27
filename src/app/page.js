@@ -130,7 +130,7 @@ const HomePage = () => {
             Coming Soon...
           </h2>
           <p className="text-lg md:text-xl" style={{ color: '#2e3b5f' }}>
-            I'm excited to share some new upcoming features with you!
+            Im excited to share some new upcoming features with you!
           </p>
           <div className="flex flex-col mt-8">
             {newFeatures.map((feature, index) => (
