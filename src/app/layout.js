@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Navbar } from "../components/Navbar";
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
             {/* <div className=" mx-36 flex flex-col items-center text-center mt-2"> */}
             <div className="flex flex-col items-center text-center">
               {children} 
+              <Analytics />
             </div>
           </div>
         </body>
